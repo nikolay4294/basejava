@@ -5,21 +5,24 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
-    private int quantityResume;
+    private int countResume;
 
     void clear() {
-        for(int i = 0; i < quantityResume; i++) {
+        for(int i = 0; i < countResume; i++) {
             storage[i] = null;
         }
+        countResume = 0;
     }
 
     void save(Resume r) {
-        storage[quantityResume] = r;
-        quantityResume++;
+        storage[countResume] = r;
+        countResume++;
+
+
     }
 
     Resume get(String uuid) {
-        for(int i = 0; i < quantityResume; i++) {
+        for(int i = 0; i < countResume; i++) {
             if(storage[i].uuid.equals(uuid)) {
                 return storage[i];
             }
@@ -28,12 +31,16 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < quantityResume; i++) {
-            int num = i;
+        for(int i = 0; i < countResume; i++) {
             if (storage[i].uuid.equals(uuid)) {
+                System.out.println(storage[i].uuid);
                 storage[i] = null;
             }
-            storage[num] = storage[num+1];
+                for(int j = i; j < countResume; j++) {
+                    storage[j] = storage[j+1];
+                }
+        countResume--;
+        break;
         }
     }
 
@@ -41,10 +48,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return Arrays.copyOf(storage, quantityResume);
+        return Arrays.copyOf(storage, countResume);
     }
 
     int size() {
-        return quantityResume;
+        return countResume;
     }
 }
