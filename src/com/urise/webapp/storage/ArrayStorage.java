@@ -18,17 +18,56 @@ public class ArrayStorage {
         countResume = 0;
     }
 
+    public void update(Resume resume) {
+        for (int i = 0; i < countResume; i++) {
+            if (storage[i].equals(resume)) {
+                storage[i] = resume;
+                System.out.println("Резюме успешно обновлено");
+            }
+        }
+        System.out.println("Ошибка! Такого резюме нет в базе данных");
+    }
+
     public void save(Resume r) {
-        storage[countResume] = r;
-        countResume++;
+        for (int i = 0; i <= countResume; i++) {
+            if (chekStorage(r) || chekCountResume(this.countResume)) {
+                storage[countResume] = r;
+                countResume++;
+                System.out.println("Резюме успешно добавлено.");
+                break;
+            } else if (!chekStorage(r)) {
+                System.out.println("База переполнена, резюме не добавлено.");
+            }
+        }
+    }
+
+    /**
+     * @return boolean, checks the database for a resume
+     */
+    private boolean chekStorage(Resume r) {
+        for (int i = 0; i < countResume; i++) {
+            if (storage[i].equals(r)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean chekCountResume(int countResume) {
+        if (countResume <= 10000) {
+            return true;
+        }
+        return false;
     }
 
     public Resume get(String uuid) {
         for (int i = 0; i < countResume; i++) {
             if (storage[i].getUuid().equals(uuid)) {
+                System.out.println("Резюме найдено");
                 return storage[i];
             }
         }
+        System.out.println("Запрашиваемое резюме отсутствует в базе.");
         return null;
     }
 
@@ -38,6 +77,9 @@ public class ArrayStorage {
                 System.out.println(storage[i].getUuid());
                 storage[i] = null;
                 countResume--;
+                System.out.println("Резюме удалено.");
+            } else {
+                System.out.println("Резюме отсутствует в базе, удалить его невозможно.");
             }
             for (int j = i; j < countResume; j++) {
                 storage[j] = storage[j + 1];
