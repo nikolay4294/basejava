@@ -12,9 +12,7 @@ public class ArrayStorage {
     private int countResume;
 
     public void clear() {
-        for (int i = 0; i < countResume; i++) {
-            storage[i] = null;
-        }
+        Arrays.fill(storage,0, countResume, null);
         countResume = 0;
     }
 
@@ -22,18 +20,18 @@ public class ArrayStorage {
         for (int i = 0; i < countResume; i++) {
             if (storage[i].equals(resume)) {
                 storage[i] = resume;
-                System.out.println("Резюме успешно обновлено");
+                System.out.println("Резюме " + resume.getUuid() + " успешно обновлено");
             }
         }
         System.out.println("Ошибка! Такого резюме нет в базе данных");
     }
 
     public void save(Resume r) {
-        for (int i = 0; i <= countResume; i++) {
+        for (int i = 0; i < countResume + 1; i++) {
             if (chekStorage(r) || chekCountResume(this.countResume)) {
                 storage[countResume] = r;
                 countResume++;
-                System.out.println("Резюме успешно добавлено.");
+                System.out.println("Резюме " + r.getUuid() + " успешно добавлено.");
                 break;
             } else if (!chekStorage(r)) {
                 System.out.println("База переполнена, резюме не добавлено.");
@@ -62,8 +60,8 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         for (int i = 0; i < countResume; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                System.out.println("Резюме найдено");
+            if (compareUuid(i, uuid)) {
+                System.out.println("Резюме " + uuid + " найдено");
                 return storage[i];
             }
         }
@@ -73,11 +71,10 @@ public class ArrayStorage {
 
     public void delete(String uuid) {
         for (int i = 0; i < countResume; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                System.out.println(storage[i].getUuid());
+            if (compareUuid(i,uuid)) {
                 storage[i] = null;
                 countResume--;
-                System.out.println("Резюме удалено.");
+                System.out.println("Резюме " + uuid + " удалено.");
             } else {
                 System.out.println("Резюме отсутствует в базе, удалить его невозможно.");
             }
@@ -86,6 +83,13 @@ public class ArrayStorage {
             }
             break;
         }
+    }
+
+    public boolean compareUuid(int i, String uuid) {
+        if (storage[i].getUuid().equals(uuid)) {
+            return true;
+        }
+        return false;
     }
 
     /**
