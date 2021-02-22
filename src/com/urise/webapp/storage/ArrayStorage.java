@@ -12,84 +12,52 @@ public class ArrayStorage {
     private int countResume;
 
     public void clear() {
-        Arrays.fill(storage,0, countResume, null);
+        Arrays.fill(storage, 0, countResume, null);
         countResume = 0;
     }
 
     public void update(Resume resume) {
-        for (int i = 0; i < countResume; i++) {
-            if (storage[i].equals(resume)) {
-                storage[i] = resume;
-                System.out.println("Резюме " + resume.getUuid() + " успешно обновлено");
-            }
+        String uuid = resume.getUuid();
+        if (chekStorage(uuid) >= 0) {
+            storage[chekStorage(uuid)] = resume;
+            System.out.println("Резюме " + resume.getUuid() + " успешно обновлено");
         }
-        System.out.println("Ошибка! Такого резюме нет в базе данных");
+        System.out.println("Ошибка! Резюме " + resume.getUuid() + " нет в базе данных");
     }
 
-    public void save(Resume r) {
-        for (int i = 0; i < countResume + 1; i++) {
-            if (chekStorage(r) || chekCountResume(this.countResume)) {
-                storage[countResume] = r;
-                countResume++;
-                System.out.println("Резюме " + r.getUuid() + " успешно добавлено.");
-                break;
-            } else if (!chekStorage(r)) {
-                System.out.println("База переполнена, резюме не добавлено.");
-            }
+    public void save(Resume resume) {
+        String uuid = resume.getUuid();
+        if (chekStorage(uuid) == -1 || this.countResume < 10000) {
+            storage[countResume] = resume;
+            countResume++;
+            System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
+        } else if (this.countResume >= 10000) {
+            System.out.println("База переполнена, резюме не добавлено.");
         }
-    }
-
-    /**
-     * @return boolean, checks the database for a resume
-     */
-    private boolean chekStorage(Resume r) {
-        for (int i = 0; i < countResume; i++) {
-            if (storage[i].equals(r)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean chekCountResume(int countResume) {
-        if (countResume <= 10000) {
-            return true;
-        }
-        return false;
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < countResume; i++) {
-            if (compareUuid(i, uuid)) {
-                System.out.println("Резюме " + uuid + " найдено");
-                return storage[i];
-            }
+        if (chekStorage(uuid) >= 0) {
+            System.out.println("Резюме " + uuid + " найдено");
+            return storage[chekStorage(uuid)];
         }
-        System.out.println("Запрашиваемое резюме отсутствует в базе.");
+        System.out.println("Запрашиваемое резюме " + uuid + " отсутствует в базе.");
         return null;
     }
 
     public void delete(String uuid) {
-        for (int i = 0; i < countResume; i++) {
-            if (compareUuid(i,uuid)) {
-                storage[i] = null;
-                countResume--;
-                System.out.println("Резюме " + uuid + " удалено.");
-            } else {
-                System.out.println("Резюме отсутствует в базе, удалить его невозможно.");
-            }
-            for (int j = i; j < countResume; j++) {
-                storage[j] = storage[j + 1];
-            }
-            break;
-        }
-    }
+        int number = chekStorage(uuid);
+        storage[number] = null;
+        countResume--;
+        System.out.println("Резюме " + uuid + " удалено.");
 
-    public boolean compareUuid(int i, String uuid) {
-        if (storage[i].getUuid().equals(uuid)) {
-            return true;
+        if (number < 0) {
+            System.out.println("Резюме " + uuid + " отсутствует в базе, удалить его невозможно.");
         }
-        return false;
+
+        for (int j = number; j < countResume; j++) {
+            storage[j] = storage[j + 1];
+        }
     }
 
     /**
@@ -101,5 +69,17 @@ public class ArrayStorage {
 
     public int size() {
         return countResume;
+    }
+
+    /**
+     * @return int, checks the database for a resume and returns the serial number in base.
+     */
+    private int chekStorage(String uuid) {
+        for (int i = 0; i < countResume - 1; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
