@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[10_000];
     private int countResume;
 
     public void clear() {
@@ -18,8 +18,9 @@ public class ArrayStorage {
 
     public void update(Resume resume) {
         String uuid = resume.getUuid();
-        if (chekStorage(uuid) >= 0) {
-            storage[chekStorage(uuid)] = resume;
+        int index = findIndex(uuid);
+        if (index >= 0) {
+            storage[index] = resume;
             System.out.println("Резюме " + resume.getUuid() + " успешно обновлено");
         }
         System.out.println("Ошибка! Резюме " + resume.getUuid() + " нет в базе данных");
@@ -27,35 +28,38 @@ public class ArrayStorage {
 
     public void save(Resume resume) {
         String uuid = resume.getUuid();
-        if (chekStorage(uuid) == -1 || this.countResume < 10000) {
+        int index = findIndex(uuid);
+        if (index == -1 || this.countResume < storage.length) {
             storage[countResume] = resume;
             countResume++;
             System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
-        } else if (this.countResume >= 10000) {
+        } else if (index >= 0) {
+            System.out.println("Резюме " + resume.getUuid() + " не добавлено, так как уже существует в базе");
+        } else {
             System.out.println("База переполнена, резюме не добавлено.");
         }
     }
 
     public Resume get(String uuid) {
-        if (chekStorage(uuid) >= 0) {
+        int index = findIndex(uuid);
+        if (index >= 0) {
             System.out.println("Резюме " + uuid + " найдено");
-            return storage[chekStorage(uuid)];
+            return storage[index];
         }
         System.out.println("Запрашиваемое резюме " + uuid + " отсутствует в базе.");
         return null;
     }
 
     public void delete(String uuid) {
-        int number = chekStorage(uuid);
-        storage[number] = null;
-        countResume--;
-        System.out.println("Резюме " + uuid + " удалено.");
-
-        if (number < 0) {
+        int index = findIndex(uuid);
+        if (index >= 0) {
+            storage[index] = null;
+            countResume--;
+            System.out.println("Резюме " + uuid + " удалено.");
+        } else if (index == -1) {
             System.out.println("Резюме " + uuid + " отсутствует в базе, удалить его невозможно.");
         }
-
-        for (int j = number; j < countResume; j++) {
+        for (int j = index; j < countResume; j++) {
             storage[j] = storage[j + 1];
         }
     }
@@ -74,8 +78,8 @@ public class ArrayStorage {
     /**
      * @return int, checks the database for a resume and returns the serial number in base.
      */
-    private int chekStorage(String uuid) {
-        for (int i = 0; i < countResume - 1; i++) {
+    private int findIndex(String uuid) {
+        for (int i = 0; i < countResume; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
