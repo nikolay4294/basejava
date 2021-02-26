@@ -22,22 +22,23 @@ public class ArrayStorage {
         if (index >= 0) {
             storage[index] = resume;
             System.out.println("Резюме " + resume.getUuid() + " успешно обновлено");
-        }
-        System.out.println("Ошибка! Резюме " + resume.getUuid() + " нет в базе данных");
+        } else
+            System.out.println("Ошибка! Резюме " + resume.getUuid() + " нет в базе данных");
     }
 
     public void save(Resume resume) {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
         if (countResume < storage.length) {
-            storage[countResume] = resume;
-            countResume++;
-            System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
-        } else if (index >= 0) {
-            System.out.println("Резюме " + resume.getUuid() + " не добавлено, так как уже существует в базе");
-        } else if (countResume > storage.length) {
-            System.out.println("База переполнена, резюме не добавлено.");
-        }
+            if (index == -1) {
+                storage[countResume] = resume;
+                countResume++;
+                System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
+            } else {
+                System.out.println("Резюме " + resume.getUuid() + " не добавлено, так как уже существует в базе");
+            }
+        } else
+            System.out.println("База переполнена, резюме " + resume.getUuid() + " не добавлено.");
     }
 
     public Resume get(String uuid) {
@@ -45,7 +46,7 @@ public class ArrayStorage {
         if (index >= 0) {
             System.out.println("Резюме " + uuid + " найдено");
             return storage[index];
-        }
+        } else
         System.out.println("Запрашиваемое резюме " + uuid + " отсутствует в базе.");
         return null;
     }
@@ -56,10 +57,9 @@ public class ArrayStorage {
             storage[index] = null;
             countResume--;
             System.out.println("Резюме " + uuid + " удалено.");
-        } else if (index == -1) {
+            storage[index] = storage[countResume];
+        } else
             System.out.println("Резюме " + uuid + " отсутствует в базе, удалить его невозможно.");
-        }
-        storage[index] = storage[countResume];
     }
 
     /**
