@@ -4,18 +4,15 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
-/**
- * Array based storage for Resumes
- */
-public class ArrayStorage extends AbstractArrayStorage {
-    final private Resume[] storage = new Resume[10_000];
-    private int countResume;
+public class SortedArrayStorage extends AbstractArrayStorage {
 
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, countResume, null);
         countResume = 0;
     }
 
+    @Override
     public void update(Resume resume) {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
@@ -27,11 +24,12 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
+    @Override
     public void save(Resume resume) {
         String uuid = resume.getUuid();
-        int index = findIndex(uuid);
+        int index = -(findIndex(uuid));
         if (countResume < storage.length) {
-            if (index == -1) {
+            if (index > 0) {
                 storage[countResume] = resume;
                 countResume++;
                 System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
@@ -43,8 +41,9 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
+    @Override
     public void delete(String uuid) {
-        int index = findIndex(uuid);
+        int index = -(findIndex(uuid));
         if (index >= 0) {
             countResume--;
             System.out.println("Резюме " + uuid + " удалено.");
@@ -54,26 +53,15 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, countResume);
     }
 
-    public int size() {
-        return countResume;
-    }
-
-    /**
-     * @return int, checks the database for a resume and returns the serial number in base.
-     */
+    @Override
     protected int findIndex(String uuid) {
-        for (int i = 0; i < countResume; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
+        Resume searchKey = new Resume();
+        searchKey.setUuid(uuid);
+        return Arrays.binarySearch(storage, 0, countResume, searchKey);
     }
 }
