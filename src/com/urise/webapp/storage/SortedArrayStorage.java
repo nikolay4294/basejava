@@ -7,12 +7,6 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void clear() {
-        Arrays.fill(storage, 0, countResume, null);
-        countResume = 0;
-    }
-
-    @Override
     public void update(Resume resume) {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);

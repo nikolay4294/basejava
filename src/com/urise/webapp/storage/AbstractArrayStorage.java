@@ -10,16 +10,16 @@ public abstract class AbstractArrayStorage implements Storage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int countResume = 0;
 
-    public int size() {
+    public final int size() {
         return countResume;
     }
 
-    public void clear() {
+    public final void clear() {
         Arrays.fill(storage, 0, countResume, null);
         countResume = 0;
     }
 
-    public Resume get(String uuid) {
+    public final Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index >= 0) {
             System.out.println("Резюме " + uuid + " найдено");

@@ -11,11 +11,6 @@ public class ArrayStorage extends AbstractArrayStorage {
     final private Resume[] storage = new Resume[10_000];
     private int countResume;
 
-    public void clear() {
-        Arrays.fill(storage, 0, countResume, null);
-        countResume = 0;
-    }
-
     public void update(Resume resume) {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
@@ -59,10 +54,6 @@ public class ArrayStorage extends AbstractArrayStorage {
      */
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, countResume);
-    }
-
-    public int size() {
-        return countResume;
     }
 
     /**
