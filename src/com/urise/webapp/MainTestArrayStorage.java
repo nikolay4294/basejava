@@ -34,6 +34,7 @@ public class MainTestArrayStorage {
         ARRAY_STORAGE.delete(r1.getUuid());
         printAll();
         ARRAY_STORAGE.clear();
+        System.out.println("после этой строки массив должен быть пустой");
         printAll();
 
         System.out.println("Size: " + ARRAY_STORAGE.size());

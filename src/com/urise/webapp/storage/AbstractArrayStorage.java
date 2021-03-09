@@ -18,7 +18,7 @@ public abstract class AbstractArrayStorage implements Storage {
         countResume = 0;
     }
 
-    //шаблонный метод, так как реализует абстрактый метод findIndex
+    //шаблонный метод, так как реализует абстрактный метод findIndex
     public final void update(Resume resume) {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
@@ -30,7 +30,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    //шаблонный метод, так как реализует абстрактый метод findIndex
+    //шаблонный метод, так как реализует абстрактный метод findIndex
     public final void save(Resume resume) {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
@@ -47,19 +47,18 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    //шаблонный метод, так как реализует абстрактый метод findIndex
+    //шаблонный метод, так как реализует абстрактный метод findIndex
     public final Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index >= 0) {
             System.out.println("Резюме " + uuid + " найдено");
             return storage[index];
-        } else {
-            System.out.println("Запрашиваемое резюме " + uuid + " отсутствует в базе.");
-            return null;
         }
+        System.out.println("Запрашиваемое резюме " + uuid + " отсутствует в базе.");
+        return null;
     }
 
-    //шаблонный метод, так как реализует абстрактый метод findIndex
+    //шаблонный метод, так как реализует абстрактный метод findIndex
     public final void delete(String uuid) {
         int index = findIndex(uuid);
         if (index >= 0) {
