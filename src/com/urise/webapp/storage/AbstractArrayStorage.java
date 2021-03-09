@@ -10,11 +10,15 @@ public abstract class AbstractArrayStorage implements Storage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int countResume = 0;
 
-    public final void clear() {
+    protected abstract int findIndex(String uuid);
+
+    @Override
+    public void clear() {
         Arrays.fill(storage, 0, countResume, null);
         countResume = 0;
     }
 
+    //шаблонный метод, так как реализует абстрактый метод findIndex
     public final void update(Resume resume) {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
@@ -26,6 +30,24 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
+    //шаблонный метод, так как реализует абстрактый метод findIndex
+    public final void save(Resume resume) {
+        String uuid = resume.getUuid();
+        int index = findIndex(uuid);
+        if (countResume < storage.length) {
+            if (index < 0) {
+                storage[countResume] = resume;
+                countResume++;
+                System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
+            } else {
+                System.out.println("Резюме " + resume.getUuid() + " не добавлено, так как уже существует в базе");
+            }
+        } else {
+            System.out.println("База переполнена, резюме " + resume.getUuid() + " не добавлено.");
+        }
+    }
+
+    //шаблонный метод, так как реализует абстрактый метод findIndex
     public final Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index >= 0) {
@@ -37,6 +59,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
+    //шаблонный метод, так как реализует абстрактый метод findIndex
     public final void delete(String uuid) {
         int index = findIndex(uuid);
         if (index >= 0) {
@@ -48,13 +71,11 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public final Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, countResume);
     }
 
-    public final int size() {
+    public int size() {
         return countResume;
     }
-
-    protected abstract int findIndex(String uuid);
 }
