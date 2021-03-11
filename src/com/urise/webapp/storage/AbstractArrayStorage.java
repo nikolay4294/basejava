@@ -12,6 +12,10 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected abstract int findIndex(String uuid);
 
+    protected abstract void saveResume(Resume resume, int index);
+
+    protected abstract void deleteResume(int index);
+
     @Override
     public void clear() {
         Arrays.fill(storage, 0, countResume, null);
@@ -35,12 +39,12 @@ public abstract class AbstractArrayStorage implements Storage {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
         if (countResume < storage.length) {
-            if (index < 0) {
-                storage[countResume] = resume;
+            if (index > 0) {
+                System.out.println("Резюме " + resume.getUuid() + " не добавлено, так как уже существует в базе");
+            } else {
+                saveResume(resume, index);
                 countResume++;
                 System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
-            } else {
-                System.out.println("Резюме " + resume.getUuid() + " не добавлено, так как уже существует в базе");
             }
         } else {
             System.out.println("База переполнена, резюме " + resume.getUuid() + " не добавлено.");
@@ -53,18 +57,19 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index >= 0) {
             System.out.println("Резюме " + uuid + " найдено");
             return storage[index];
+        } else {
+            System.out.println("Запрашиваемое резюме " + uuid + " отсутствует в базе.");
+            return null;
         }
-        System.out.println("Запрашиваемое резюме " + uuid + " отсутствует в базе.");
-        return null;
     }
 
     //шаблонный метод, так как реализует абстрактный метод findIndex
     public final void delete(String uuid) {
         int index = findIndex(uuid);
         if (index >= 0) {
+            deleteResume(index);
             countResume--;
             System.out.println("Резюме " + uuid + " удалено.");
-            storage[index] = storage[countResume];
         } else {
             System.out.println("Резюме " + uuid + " отсутствует в базе, удалить его невозможно.");
         }
