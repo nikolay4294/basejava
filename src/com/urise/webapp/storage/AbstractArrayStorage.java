@@ -34,7 +34,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    //шаблонный метод, так как реализует абстрактный метод findIndex
+    //шаблонный метод, так как реализует абстрактный метод findIndex и saveResume
     public final void save(Resume resume) {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
@@ -63,7 +63,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    //шаблонный метод, так как реализует абстрактный метод findIndex
+    //шаблонный метод, так как реализует абстрактный метод findIndex и deleteResume
     public final void delete(String uuid) {
         int index = findIndex(uuid);
         if (index >= 0) {
