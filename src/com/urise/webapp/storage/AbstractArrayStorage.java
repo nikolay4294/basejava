@@ -1,5 +1,8 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -30,7 +33,7 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[index] = resume;
             System.out.println("Резюме " + resume.getUuid() + " успешно обновлено");
         } else {
-            System.out.println("Ошибка! Резюме " + resume.getUuid() + " нет в базе данных");
+            throw new NotExistStorageException(resume.getUuid());
         }
     }
 
@@ -40,14 +43,14 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = findIndex(uuid);
         if (countResume < storage.length) {
             if (index > 0) {
-                System.out.println("Резюме " + resume.getUuid() + " не добавлено, так как уже существует в базе");
+                throw new ExistStorageException(uuid);
             } else {
                 saveResume(resume, index);
                 countResume++;
                 System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
             }
         } else {
-            System.out.println("База переполнена, резюме " + resume.getUuid() + " не добавлено.");
+            throw new StorageException("База переполнена", resume.getUuid());
         }
     }
 
@@ -58,8 +61,7 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("Резюме " + uuid + " найдено");
             return storage[index];
         } else {
-            System.out.println("Запрашиваемое резюме " + uuid + " отсутствует в базе.");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
     }
 
@@ -71,7 +73,7 @@ public abstract class AbstractArrayStorage implements Storage {
             countResume--;
             System.out.println("Резюме " + uuid + " удалено.");
         } else {
-            System.out.println("Резюме " + uuid + " отсутствует в базе, удалить его невозможно.");
+            throw new NotExistStorageException(uuid);
         }
     }
 
