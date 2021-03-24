@@ -42,7 +42,7 @@ public abstract class AbstractArrayStorage implements Storage {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
         if (countResume < storage.length) {
-            if (index > 0) {
+            if (index >= 0) {
                 throw new ExistStorageException(uuid);
             } else {
                 saveResume(resume, index);
