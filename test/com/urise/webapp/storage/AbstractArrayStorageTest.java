@@ -62,7 +62,7 @@ public abstract class AbstractArrayStorageTest {
     public void checkArrayIsFull() {
         Resume[] resumes = new Resume[AbstractArrayStorage.STORAGE_LIMIT];
         try {
-            for(int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+            for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
                 resumes[i] = new Resume();
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -70,7 +70,6 @@ public abstract class AbstractArrayStorageTest {
         }
         resumes[AbstractArrayStorage.STORAGE_LIMIT + 1] = r4;
     }
-
 
 
     @Test
