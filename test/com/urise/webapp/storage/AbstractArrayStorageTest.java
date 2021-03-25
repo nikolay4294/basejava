@@ -28,9 +28,9 @@ public abstract class AbstractArrayStorageTest {
     @Before
     public void setUp() {
         storage.clear();
-        storage.save(new Resume(UUID_1));
-        storage.save(new Resume(UUID_2));
-        storage.save(new Resume(UUID_3));
+        storage.save(r1);
+        storage.save(r2);
+        storage.save(r3);
     }
 
     @Test
@@ -55,43 +55,45 @@ public abstract class AbstractArrayStorageTest {
     public void save() {
         storage.save(r4);
         Assert.assertEquals(4, storage.size());
-        Assert.assertEquals(r4, storage.get("uuid4"));
+        Assert.assertEquals(r4, storage.get(UUID_4));
     }
 
     @Test(expected = ArrayIndexOutOfBoundsException.class)
     public void checkArrayIsFull() {
-        Resume[] resumes = new Resume[storage.size()];
+        Resume[] resumes = new Resume[AbstractArrayStorage.STORAGE_LIMIT];
         try {
-            resumes[0] = r1;
-            resumes[1] = r2;
-            resumes[2] = r3;
+            for(int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+                resumes[i] = new Resume();
+            }
         } catch (ArrayIndexOutOfBoundsException e) {
             Assert.fail("переполнение произошло раньше времени");
         }
-        resumes[3] = r4;
+        resumes[AbstractArrayStorage.STORAGE_LIMIT + 1] = r4;
     }
+
+
 
     @Test
     public void get() {
-        Resume actualResume = storage.get("uuid1");
+        Resume actualResume = storage.get(UUID_1);
         Assert.assertEquals(r1, actualResume);
     }
 
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() {
-        storage.get("dummy");
+        storage.get(UUID_4);
     }
 
     @Test(expected = NotExistStorageException.class)
     public void delete() {
         storage.delete(UUID_1);
-        storage.get(UUID_1);
         Assert.assertEquals(2, storage.size());
+        storage.get(UUID_1);
     }
 
     @Test(expected = NotExistStorageException.class)
     public void deleteNotExist() {
-        storage.delete("uuid 5");
+        storage.delete(UUID_4);
     }
 
     @Test
