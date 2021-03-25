@@ -1,6 +1,7 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,19 +59,17 @@ public abstract class AbstractArrayStorageTest {
         Assert.assertEquals(r4, storage.get(UUID_4));
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = StorageException.class)
     public void checkArrayIsFull() {
-        Resume[] resumes = new Resume[AbstractArrayStorage.STORAGE_LIMIT];
         try {
-            for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                resumes[i] = new Resume();
+            for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+                storage.save(new Resume());
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (StorageException e) {
             Assert.fail("переполнение произошло раньше времени");
         }
-        resumes[AbstractArrayStorage.STORAGE_LIMIT + 1] = r4;
+        storage.save(r4);
     }
-
 
     @Test
     public void get() {
