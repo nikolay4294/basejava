@@ -1,87 +1,46 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10_000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
-    protected int countResume = 0;
-
-    protected abstract int findIndex(String uuid);
 
     protected abstract void saveResume(Resume resume, int index);
 
     protected abstract void deleteResume(int index);
 
-    @Override
-    public void clear() {
+
+    public void doClearResume() {
         Arrays.fill(storage, 0, countResume, null);
         countResume = 0;
     }
 
-    //шаблонный метод, так как реализует абстрактный метод findIndex
-    public final void update(Resume resume) {
-        String uuid = resume.getUuid();
-        int index = findIndex(uuid);
-        if (index >= 0) {
-            storage[index] = resume;
-            System.out.println("Резюме " + resume.getUuid() + " успешно обновлено");
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+    public void doUpdate(Resume resume, int index) {
+        storage[index] = resume;
     }
 
-    //шаблонный метод, так как реализует абстрактный метод findIndex и saveResume
-    public final void save(Resume resume) {
-        String uuid = resume.getUuid();
-        int index = findIndex(uuid);
+    public void doSave(Resume resume, int index) {
         if (countResume < storage.length) {
-            if (index >= 0) {
-                throw new ExistStorageException(uuid);
-            } else {
-                saveResume(resume, index);
-                countResume++;
-                System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
-            }
+            saveResume(resume, index);
         } else {
             throw new StorageException("База переполнена", resume.getUuid());
         }
     }
 
-    //шаблонный метод, так как реализует абстрактный метод findIndex
-    public final Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index >= 0) {
-            System.out.println("Резюме " + uuid + " найдено");
-            return storage[index];
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    public final Resume doGetResume(String uuid, int index) {
+        return storage[index];
     }
 
-    //шаблонный метод, так как реализует абстрактный метод findIndex и deleteResume
-    public final void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index >= 0) {
-            deleteResume(index);
-            countResume--;
-            System.out.println("Резюме " + uuid + " удалено.");
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    public final void doDeleteResume(String uuid, int index) {
+        deleteResume(index);
     }
 
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, countResume);
-    }
-
-    public int size() {
-        return countResume;
     }
 }
