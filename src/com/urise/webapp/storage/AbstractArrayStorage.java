@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10_000;
+    protected static int countResume = 0;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
 
@@ -15,7 +16,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void deleteResume(int index);
 
 
-    public void doClearResume() {
+    public void clear() {
         Arrays.fill(storage, 0, countResume, null);
         countResume = 0;
     }
@@ -27,6 +28,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     public void doSave(Resume resume, int index) {
         if (countResume < storage.length) {
             saveResume(resume, index);
+            countResume++;
         } else {
             throw new StorageException("База переполнена", resume.getUuid());
         }
@@ -38,9 +40,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     public final void doDeleteResume(String uuid, int index) {
         deleteResume(index);
+        countResume--;
     }
 
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, countResume);
+    }
+
+    public int size() {
+        return countResume;
     }
 }

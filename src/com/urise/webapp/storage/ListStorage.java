@@ -3,46 +3,57 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ListStorage extends AbstractStorage{
-
-    protected ArrayList<Resume> arrayList = new ArrayList<>();
+public class ListStorage extends AbstractStorage {
+    private List<Resume> listStorage = new ArrayList<>();
 
     @Override
-    public void doClearResume() {
-        arrayList.clear();
+    public void clear() {
+        listStorage.removeAll(listStorage);
     }
 
     @Override
     public void doUpdate(Resume resume, int index) {
-        arrayList.set(index, resume);
+        listStorage.set(index, resume);
     }
 
     @Override
     public void doSave(Resume resume, int index) {
-        arrayList.add(resume);
+        listStorage.add(resume);
     }
 
     @Override
     public Resume doGetResume(String uuid, int index) {
-        return arrayList.get(index);
+        return listStorage.get(index);
     }
 
     @Override
     public void doDeleteResume(String uuid, int index) {
-        arrayList.remove(index);
+        listStorage.remove(index);
     }
 
     @Override
     public Resume[] getAll() {
-        for(Resume r : arrayList) {
-            System.out.println(r);
+        Resume[] resumes = new Resume[3];
+        for (int i = 0; i < listStorage.size(); i++) {
+            resumes[i] = listStorage.get(i);
         }
-        return null;
+        return resumes;
     }
 
     @Override
-        protected int findIndex(String uuid) {
-            return arrayList.indexOf(uuid);
+    public int size() {
+        return listStorage.size();
+    }
+
+    @Override
+    protected int findIndex(String uuid) {
+        for (int i = 0; i < listStorage.size(); i++) {
+            if (listStorage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
