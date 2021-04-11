@@ -35,10 +35,8 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        Resume[] resumes = new Resume[3];
-        for (int i = 0; i < listStorage.size(); i++) {
-            resumes[i] = listStorage.get(i);
-        }
+        Resume[] resumes = new Resume[listStorage.size()];
+        listStorage.toArray(resumes);
         return resumes;
     }
 
