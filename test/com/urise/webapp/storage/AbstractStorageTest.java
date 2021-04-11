@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 import org.junit.Assert;
@@ -56,6 +57,11 @@ public abstract class AbstractStorageTest {
         storage.save(r4);
         Assert.assertEquals(4, storage.size());
         Assert.assertEquals(r4, storage.get(UUID_4));
+    }
+
+    @Test (expected = ExistStorageException.class)
+    public void saveNotExist() {
+        storage.save(r1);
     }
 
     @Test
