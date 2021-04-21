@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class MainReflection {
 
     public static void main(String[] args) throws IllegalAccessException {
-        Resume r = new Resume();
+        Resume r = new Resume("Сергей Петрович");
         Field field = r.getClass().getDeclaredFields()[0];
         field.setAccessible(true); //отмена проверка доступа
         System.out.println(field.getName());
@@ -22,7 +22,7 @@ public class MainReflection {
     }
 
     public void toString(Object myClass) throws NoSuchMethodException {
-        Resume r = new Resume();
+        Resume r = new Resume("Сергей Петрович");
         try {
             Method method = r.getClass().getDeclaredMethod(toString());
             method.setAccessible(true);

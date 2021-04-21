@@ -6,16 +6,20 @@ import java.util.*;
 
 public class MainCollections {
     private static final String UUID_1 = "uuid1";
-    private static final Resume r1 = new Resume(UUID_1);
+    private static final String FULL_NAME_1 = "Иван Петров";
+    private static final Resume r1 = new Resume(UUID_1, FULL_NAME_1);
 
     private static final String UUID_2 = "uuid2";
-    private static final Resume r2 = new Resume(UUID_2);
+    private static final String FULL_NAME_2 = "Сергей Трушин";
+    private static final Resume r2 = new Resume(UUID_2, FULL_NAME_2);
 
     private static final String UUID_3 = "uuid3";
-    private static final Resume r3 = new Resume(UUID_3);
+    private static final String FULL_NAME_3 = "Василий Петрович";
+    private static final Resume r3 = new Resume(UUID_3, FULL_NAME_3);
 
     private static final String UUID_4 = "uuid4";
-    private static final Resume r4 = new Resume(UUID_4);
+    private static final String FULL_NAME_4 = "Михаил Сергеевич";
+    private static final Resume r4 = new Resume(UUID_4, FULL_NAME_4);
 
     public static void main(String[] args) {
         Collection<Resume> collection = new ArrayList<>();
@@ -50,5 +54,9 @@ public class MainCollections {
         for (Map.Entry<String, Resume> entry : map.entrySet()) {
             System.out.println(entry.getValue());
         }
+
+        List<Resume> resumes = Arrays.asList(r1, r2, r3);
+        resumes.remove(r1);
+        System.out.println(resumes);
     }
 }
