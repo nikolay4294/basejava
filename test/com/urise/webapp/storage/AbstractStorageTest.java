@@ -7,6 +7,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 public abstract class AbstractStorageTest {
     protected final Storage storage;
 
@@ -90,15 +93,11 @@ public abstract class AbstractStorageTest {
     public void deleteNotExist() {
         storage.delete(UUID_4);
     }
-}
 
-    /*
     @Test
-    public void getAll() {
-        Resume[] expectedStorage = {r1, r2, r3};
-        Resume[] actualStorage = storage.getAll();
-        Assert.assertArrayEquals(expectedStorage, actualStorage);
+    public void getAllSorted() {
+        List<Resume> actualList = storage.getAllSorted();
+        List<Resume> expectedList = Arrays.asList(r1, r2, r3);
+        Assert.assertEquals(expectedList, actualList);
     }
 }
-
-     */

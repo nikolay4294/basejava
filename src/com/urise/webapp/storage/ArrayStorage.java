@@ -2,8 +2,6 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.List;
-
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
@@ -24,10 +22,5 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     protected void deleteResume(int index) {
         storage[index] = storage[countResume - 1];
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        return null;
     }
 }

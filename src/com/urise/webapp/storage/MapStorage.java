@@ -9,11 +9,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected int findIndex(String uuid) {
-        Set<String> keyList = mapStorage.keySet();
-        if (keyList.contains(uuid)) {
-            return 1;
-        }
-        return -1;
+        return mapStorage.containsKey(uuid)? 1 : -1;
     }
 
     @Override
