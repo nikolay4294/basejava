@@ -12,9 +12,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
 
-    protected abstract void saveResume(Resume resume, int index);
+    protected abstract void saveToArray(Resume resume, int index);
 
-    protected abstract void deleteResume(int index);
+    protected abstract void deleteFromArray(int index);
 
 
     public void clear() {
@@ -28,19 +28,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     public void doSave(Resume resume, int index) {
         if (countResume < storage.length) {
-            saveResume(resume, index);
+            saveToArray(resume, index);
             countResume++;
         } else {
             throw new StorageException("База переполнена", resume.getUuid());
         }
     }
 
-    public final Resume doGetResume(String uuid, int index) {
+    public final Resume doGet(String uuid, int index) {
         return storage[index];
     }
 
-    public final void doDeleteResume(String uuid, int index) {
-        deleteResume(index);
+    public final void doDelete(String uuid, int index) {
+        deleteFromArray(index);
         countResume--;
     }
 
@@ -49,6 +49,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     public List<Resume> getAllSorted() {
-        return null;
+        Resume[] newStorage = Arrays.copyOfRange(storage,0,countResume);
+        return Arrays.asList(newStorage);
     }
 }

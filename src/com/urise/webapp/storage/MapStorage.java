@@ -23,12 +23,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume doGetResume(String uuid, int index) {
+    protected Resume doGet(String uuid, int index) {
         return mapStorage.get(uuid);
     }
 
     @Override
-    protected void doDeleteResume(String uuid, int index) {
+    protected void doDelete(String uuid, int index) {
         mapStorage.remove(uuid);
     }
 
@@ -39,7 +39,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> value = (List<Resume>) mapStorage.values();
+        List<Resume> value = new ArrayList<>(mapStorage.values());
         return value;
     }
 

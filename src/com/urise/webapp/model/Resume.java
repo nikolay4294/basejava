@@ -36,10 +36,11 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public int compareTo(Resume o) {
-        if (fullName.equals(o.getFullName())) {
-            uuid.compareTo(o.uuid);
+        int result = fullName.compareTo(o.getFullName());
+        if (result == 0) {
+            return uuid.compareTo(o.uuid);
         }
-        return -1;
+        return result;
     }
 
     @Override
