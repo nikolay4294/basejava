@@ -9,7 +9,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected int findIndex(String uuid) {
-        return mapStorage.containsKey(uuid)? 1 : -1;
+        return mapStorage.containsKey(uuid) ? 1 : -1;
     }
 
     @Override
@@ -40,6 +40,7 @@ public class MapStorage extends AbstractStorage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> value = new ArrayList<>(mapStorage.values());
+        Collections.sort(value);
         return value;
     }
 

@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
@@ -36,9 +37,9 @@ public abstract class AbstractStorageTest {
     @Before
     public void setUp() {
         storage.clear();
+        storage.save(r3);
         storage.save(r1);
         storage.save(r2);
-        storage.save(r3);
     }
 
     @Test
@@ -97,7 +98,9 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAllSorted() {
         List<Resume> actualList = storage.getAllSorted();
+        Collections.sort(actualList);
         List<Resume> expectedList = Arrays.asList(r1, r2, r3);
+        Collections.sort(expectedList);
         Assert.assertEquals(expectedList, actualList);
     }
 }
