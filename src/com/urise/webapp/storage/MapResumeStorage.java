@@ -5,25 +5,18 @@ import com.urise.webapp.model.Resume;
 import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage {
+
     private Map<Resume, Resume> mapStorage = new TreeMap<>();
 
     @Override
     protected int findIndex(String uuid) {
-        List<Resume> keyList = new ArrayList<>(mapStorage.keySet());
-        for (Resume r : keyList) {
-            if (r.getUuid().equals(uuid)) return 1;
-        }
-        return -1;
+        Object ob = uuid;
+        return (mapStorage.containsValue(ob))? 1 : -1;
     }
 
     @Override
     protected void doUpdate(Resume resume, int index) {
-        List<Resume> keyList = new ArrayList<>(mapStorage.keySet());
-        for (Resume r : keyList) {
-            if (r.equals(resume)) {
-                mapStorage.put(r, resume);
-            }
-        }
+        mapStorage.replace(resume,resume);
     }
 
     @Override
@@ -33,21 +26,15 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected Resume doGet(String uuid, int index) {
-        List<Resume> value = new ArrayList<>(mapStorage.values());
-        for (Resume r : value) {
-            if (r.getUuid().equals(uuid)) return r;
-        }
-        return null;
+        Object ob = uuid;
+        Resume r = mapStorage.get(uuid);
+        return r;
     }
 
     @Override
     protected void doDelete(String uuid, int index) {
-        List<Resume> valueList = new ArrayList<>(mapStorage.values());
-        for (Resume r : valueList) {
-            if (r.getUuid().equals(uuid)) {
-                mapStorage.remove(r);
-            }
-        }
+        Object ob = uuid;
+        mapStorage.remove(uuid);
     }
 
     @Override
@@ -56,9 +43,8 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
+    public List<Resume> doGetList() {
         List<Resume> value = new ArrayList<>(mapStorage.values());
-        Collections.sort(value);
         return value;
     }
 

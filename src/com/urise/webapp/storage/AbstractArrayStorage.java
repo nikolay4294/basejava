@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
+
     protected static final int STORAGE_LIMIT = 10_000;
     protected static int countResume = 0;
 
@@ -48,7 +49,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return countResume;
     }
 
-    public List<Resume> getAllSorted() {
+    public List<Resume> doGetList() {
         Resume[] newStorage = Arrays.copyOfRange(storage,0,countResume);
         return Arrays.asList(newStorage);
     }

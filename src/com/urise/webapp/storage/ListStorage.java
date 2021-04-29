@@ -3,20 +3,19 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
+
     private List<Resume> listStorage = new ArrayList<>();
 
     @Override
     public void clear() {
-        listStorage.removeAll(listStorage);
+        listStorage.clear();
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        Collections.sort(listStorage);
+    public List<Resume> doGetList() {
         return listStorage;
     }
 

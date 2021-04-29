@@ -37,9 +37,9 @@ public abstract class AbstractStorageTest {
     @Before
     public void setUp() {
         storage.clear();
-        storage.save(r3);
-        storage.save(r1);
         storage.save(r2);
+        storage.save(r1);
+        storage.save(r3);
     }
 
     @Test
@@ -100,7 +100,7 @@ public abstract class AbstractStorageTest {
         List<Resume> actualList = storage.getAllSorted();
         Collections.sort(actualList);
         List<Resume> expectedList = Arrays.asList(r1, r2, r3);
-        Collections.sort(expectedList);
+        expectedList.sort(Resume::compareTo);
         Assert.assertEquals(expectedList, actualList);
     }
 }

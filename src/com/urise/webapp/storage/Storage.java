@@ -5,6 +5,7 @@ import com.urise.webapp.model.Resume;
 import java.util.List;
 
 public interface Storage {
+
     void clear();
 
     void update(Resume r);

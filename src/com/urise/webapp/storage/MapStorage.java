@@ -5,6 +5,7 @@ import com.urise.webapp.model.Resume;
 import java.util.*;
 
 public class MapStorage extends AbstractStorage {
+
     private Map<String, Resume> mapStorage = new TreeMap<>();
 
     @Override
@@ -38,9 +39,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
+    public List<Resume> doGetList() {
         List<Resume> value = new ArrayList<>(mapStorage.values());
-        Collections.sort(value);
         return value;
     }
 
