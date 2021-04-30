@@ -9,53 +9,53 @@ import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected abstract int findIndex(String uuid);
+    protected abstract int findIndex(Object uuid);
 
-    protected abstract void doUpdate(Resume resume, int index);
+    protected abstract void doUpdate(Object resume, Object index);
 
-    protected abstract void doSave(Resume resume, int index);
+    protected abstract void doSave(Object resume, Object index);
 
-    protected abstract Resume doGet(String uuid, int index);
+    protected abstract Resume doGet(Object uuid, Object index);
 
-    protected abstract void doDelete(String uuid, int index);
+    protected abstract void doDelete(Object uuid, Object index);
 
-    protected abstract List doGetList();
+    protected abstract List<Resume> doGetList();
 
-    private void doNotExistExceptions(String uuid, int index) {
+    private int doNotExistExceptions(String uuid) {
+        int index = findIndex(uuid);
         if (index < 0) throw new NotExistStorageException(uuid);
+        return index;
     }
 
-    private void doExistException(String uuid, int index) {
+    private int doExistException(String uuid) {
+        int index = findIndex(uuid);
         if(index >= 0) throw new ExistStorageException(uuid);
+        return index;
     }
 
     public final void update(Resume resume) {
         String uuid = resume.getUuid();
-        int index = findIndex(uuid);
-        doNotExistExceptions(uuid, index);
-        doUpdate(resume, index);
+        doNotExistExceptions(uuid);
+        doUpdate(resume, doNotExistExceptions(uuid));
         System.out.println("Резюме " + resume.getUuid() + " успешно обновлено");
     }
 
     public final void save(Resume resume) {
         String uuid = resume.getUuid();
-        int index = findIndex(uuid);
-        doExistException(uuid, index);
-        doSave(resume, index);
+        doExistException(uuid);
+        doSave(resume, doExistException(uuid));
         System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
     }
 
     public final Resume get(String uuid) {
-        int index = findIndex(uuid);
-        doNotExistExceptions(uuid, index);
+        doNotExistExceptions(uuid);
         System.out.println("Резюме " + uuid + " найдено");
-        return doGet(uuid, index);
+        return doGet(uuid, doNotExistExceptions(uuid));
     }
 
     public final void delete(String uuid) {
-        int index = findIndex(uuid);
-        doNotExistExceptions(uuid, index);
-        doDelete(uuid, index);
+        doNotExistExceptions(uuid);
+        doDelete(uuid, doNotExistExceptions(uuid));
         System.out.println("Резюме " + uuid + " удалено.");
     }
 

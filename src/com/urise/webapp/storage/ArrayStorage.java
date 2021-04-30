@@ -5,9 +5,10 @@ import com.urise.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected int findIndex(String uuid) {
+    protected int findIndex(Object uuid) {
+        String uuid1 = (String) uuid;
         for (int i = 0; i < countResume; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid1)) {
                 return i;
             }
         }

@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
@@ -98,7 +97,6 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAllSorted() {
         List<Resume> actualList = storage.getAllSorted();
-        Collections.sort(actualList);
         List<Resume> expectedList = Arrays.asList(r1, r2, r3);
         expectedList.sort(Resume::compareTo);
         Assert.assertEquals(expectedList, actualList);
