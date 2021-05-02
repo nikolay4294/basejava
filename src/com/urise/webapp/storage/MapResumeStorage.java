@@ -9,32 +9,27 @@ public class MapResumeStorage extends AbstractStorage {
     private Map<String, Resume> mapStorage = new TreeMap<>();
 
     @Override
-    protected int findIndex(Object uuid) {
-        String uuid1 = (String) uuid;
-        return (mapStorage.containsKey(uuid1))? 1 : -1;
+    protected int findIndex(String uuid) {
+        return (mapStorage.containsKey(uuid))? 1 : -1;
     }
 
     @Override
-    protected void doUpdate(Object resume, Object index) {
-        Resume resume1 = (Resume) resume;
-        mapStorage.replace(resume1.getUuid(),resume1);
+    protected void doUpdate(Resume resume, Object index) {
+        mapStorage.replace(resume.getUuid(),resume);
     }
 
     @Override
-    protected void doSave(Object resume, Object index) {
-        Resume resume1 = (Resume) resume;
-        mapStorage.put(resume1.getUuid(), resume1);
+    protected void doSave(Resume resume, Object index) {
+        mapStorage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected Resume doGet(Object uuid, Object index) {
-        String uuid1 = (String) uuid;
-        return mapStorage.get(uuid1);
+    protected Resume doGet(String uuid, Object index) {
+        return mapStorage.get(uuid);
     }
 
     @Override
-    protected void doDelete(Object uuid, Object index) {
-        String uuid1 = (String) uuid;
+    protected void doDelete(String uuid, Object index) {
         mapStorage.remove(uuid);
     }
 

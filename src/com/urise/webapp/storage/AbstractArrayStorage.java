@@ -23,29 +23,27 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         countResume = 0;
     }
 
-    public void doUpdate(Object resume, Object index) {
-        Resume resume1 = (Resume) resume;
+    public void doUpdate(Resume resume, Object index) {
         int index1 = (int) index;
-        storage[index1] = resume1;
+        storage[index1] = resume;
     }
 
-    public void doSave(Object resume, Object index) {
-        Resume resume1 = (Resume) resume;
+    public void doSave(Resume resume, Object index) {
         int index1 = (int) index;
         if (countResume < storage.length) {
-            saveToArray(resume1, index1);
+            saveToArray(resume, index1);
             countResume++;
         } else {
-            throw new StorageException("База переполнена", resume1.getUuid());
+            throw new StorageException("База переполнена", resume.getUuid());
         }
     }
 
-    public final Resume doGet(Object uuid, Object index) {
+    public final Resume doGet(String uuid, Object index) {
         int index1 = (int) index;
         return storage[index1];
     }
 
-    public final void doDelete(Object uuid, Object index) {
+    public final void doDelete(String uuid, Object index) {
         int index1 = (int) index;
         deleteFromArray(index1);
         countResume--;
