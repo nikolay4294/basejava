@@ -6,7 +6,7 @@ import com.urise.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     protected static final int STORAGE_LIMIT = 10_000;
     protected static int countResume = 0;
@@ -23,29 +23,27 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         countResume = 0;
     }
 
-    public void doUpdate(Resume resume, Object index) {
-        int index1 = (int) index;
-        storage[index1] = resume;
+    public void doUpdate(Resume resume, Integer index) {
+        storage[index] = resume;
     }
 
-    public void doSave(Resume resume, Object index) {
-        int index1 = (int) index;
+    public void doSave(Resume resume, Integer index) {
         if (countResume < storage.length) {
-            saveToArray(resume, index1);
+            saveToArray(resume, index);
             countResume++;
         } else {
             throw new StorageException("База переполнена", resume.getUuid());
         }
     }
 
-    public final Resume doGet(String uuid, Object index) {
-        int index1 = (int) index;
-        return storage[index1];
+    public final Resume doGet(Integer searchKey) {
+        //int index = findIndex(searchKey);
+        return storage[searchKey];
     }
 
-    public final void doDelete(String uuid, Object index) {
-        int index1 = (int) index;
-        deleteFromArray(index1);
+    public final void doDelete(Integer searchKey) {
+        //int index = findIndex((String) searchKey);
+        deleteFromArray(searchKey);
         countResume--;
     }
 
@@ -54,7 +52,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     public List<Resume> doGetList() {
-        Resume[] newStorage = Arrays.copyOfRange(storage,0,countResume);
+        Resume[] newStorage = Arrays.copyOfRange(storage, 0, countResume);
         return Arrays.asList(newStorage);
     }
 }
