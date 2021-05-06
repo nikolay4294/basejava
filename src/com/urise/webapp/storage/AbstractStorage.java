@@ -11,7 +11,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
-    protected abstract int findIndex(String uuid);
+    protected abstract Integer findIndex(String uuid);
 
     protected abstract void doUpdate(Resume resume, SK index);
 
@@ -23,22 +23,24 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     protected abstract List<Resume> doGetList();
 
-    private int doExistException(String uuid) {
-        int index = findIndex(uuid);
+    private SK doExistException(String uuid) {
+        Integer index = findIndex(uuid);
         if (index < 0) {
             LOG.warning("Резюме " + uuid + " не существует");
             throw new NotExistStorageException(uuid);
         }
-        return index;
+        SK num = (SK) index;
+        return num;
     }
 
-    private int doNotExistException(String uuid) {
-        int index = findIndex(uuid);
+    private SK doNotExistException(String uuid) {
+        Integer index = findIndex(uuid);
         if (index >= 0) {
             LOG.warning("Резюме " + uuid + " уже существует");
             throw new ExistStorageException(uuid);
         }
-        return index;
+        SK num = (SK) index;
+        return num;
     }
 
     public final void update(Resume resume) {
@@ -59,7 +61,8 @@ public abstract class AbstractStorage<SK> implements Storage {
         LOG.info("Get " + uuid);
         doExistException(uuid);
         System.out.println("Резюме " + uuid + " найдено");
-        return doGet((SK) uuid);
+        SK result = (SK) uuid;
+        return doGet(result);
     }
 
     public final void delete(String uuid) {

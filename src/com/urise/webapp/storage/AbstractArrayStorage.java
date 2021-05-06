@@ -24,12 +24,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     public void doUpdate(Resume resume, Integer index) {
-        storage[index] = resume;
+        int num = findIndex(resume.getUuid());
+        storage[num] = resume;
     }
 
     public void doSave(Resume resume, Integer index) {
+        int num = findIndex(resume.getUuid());
         if (countResume < storage.length) {
-            saveToArray(resume, index);
+            saveToArray(resume, num);
             countResume++;
         } else {
             throw new StorageException("База переполнена", resume.getUuid());
@@ -37,12 +39,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     public final Resume doGet(Integer searchKey) {
-        //int index = findIndex(searchKey);
+        //int num = findIndex((String) searchKey);
         return storage[searchKey];
     }
 
     public final void doDelete(Integer searchKey) {
-        //int index = findIndex((String) searchKey);
+        //int num = findIndex(searchKey);
         deleteFromArray(searchKey);
         countResume--;
     }
