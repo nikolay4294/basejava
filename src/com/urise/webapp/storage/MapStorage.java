@@ -9,17 +9,18 @@ public class MapStorage extends AbstractStorage<String> {
     private Map<String, Resume> mapStorage = new TreeMap<>();
 
     @Override
-    protected Integer findIndex(String uuid) {
-        return mapStorage.containsKey(uuid) ? 1 : -1;
+    protected String findIndex(String uuid) {
+        count = (mapStorage.containsKey(uuid)) ? 1 : -1;
+        return uuid;
     }
 
     @Override
-    protected void doUpdate(Resume resume, String index) {
+    protected void doUpdate(Resume resume, String searchKey) {
         mapStorage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected void doSave(Resume resume, String index) {
+    protected void doSave(Resume resume, String searchKey) {
         mapStorage.put(resume.getUuid(), resume);
     }
 

@@ -23,12 +23,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         countResume = 0;
     }
 
-    public void doUpdate(Resume resume, Integer index) {
+    public void doUpdate(Resume resume, Integer searchKey) {
         int num = findIndex(resume.getUuid());
         storage[num] = resume;
     }
 
-    public void doSave(Resume resume, Integer index) {
+    public void doSave(Resume resume, Integer searchKey) {
         int num = findIndex(resume.getUuid());
         if (countResume < storage.length) {
             saveToArray(resume, num);

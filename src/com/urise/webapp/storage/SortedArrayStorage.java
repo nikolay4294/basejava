@@ -20,7 +20,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     protected Integer findIndex(String uuid) {
         Resume searchKey = new Resume(uuid, "Петр Петрович");
-        return Arrays.binarySearch(storage, 0, countResume, searchKey, RESUME_COMPARATOR);
+        return count = Arrays.binarySearch(storage, 0, countResume, searchKey, RESUME_COMPARATOR);
     }
 
     @Override

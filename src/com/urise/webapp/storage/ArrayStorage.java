@@ -8,10 +8,10 @@ public class ArrayStorage extends AbstractArrayStorage {
     protected Integer findIndex(String uuid) {
         for (int i = 0; i < countResume; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                return i;
+                return count = i;
             }
         }
-        return -1;
+        return count = -1;
     }
 
     @Override

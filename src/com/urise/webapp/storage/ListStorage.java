@@ -20,27 +20,23 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public void doUpdate(Resume resume, Integer index) {
-        listStorage.set(index, resume);
+    public void doUpdate(Resume resume, Integer searchKey) {
+        listStorage.set(searchKey, resume);
     }
 
     @Override
-    public void doSave(Resume resume, Integer index) {
+    public void doSave(Resume resume, Integer searchKey) {
         listStorage.add(resume);
     }
 
     @Override
     public Resume doGet(Integer searchKey) {
-        //int index = findIndex(searchKey);
-        //return listStorage.get(index);
         return listStorage.get(searchKey);
     }
 
     @Override
     public void doDelete(Integer searchKey) {
-        //int index = findIndex(searchKey);
-        //listStorage.remove(index);
-        listStorage.remove(searchKey);
+        listStorage.remove((int) searchKey);
     }
 
     @Override
@@ -52,9 +48,9 @@ public class ListStorage extends AbstractStorage<Integer> {
     protected Integer findIndex(String uuid) {
         for (int i = 0; i < listStorage.size(); i++) {
             if (listStorage.get(i).getUuid().equals(uuid)) {
-                return i;
+                return count = i;
             }
         }
-        return -1;
+        return count = -1;
     }
 }
