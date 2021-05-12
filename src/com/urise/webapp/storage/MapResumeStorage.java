@@ -2,7 +2,10 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MapResumeStorage extends AbstractStorage<Resume> {
 
@@ -10,8 +13,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
 
     @Override
     protected Resume findIndex(String uuid) {
-        count = (mapStorage.containsKey(uuid)) ? 1 : -1;
-        return mapStorage.get(uuid);
+        return (mapStorage.containsKey(uuid)) ? mapStorage.get(uuid) : null;
     }
 
     @Override
@@ -42,6 +44,11 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     @Override
     public List<Resume> doGetList() {
         return new ArrayList<>(mapStorage.values());
+    }
+
+    @Override
+    protected int checkResumeInStorage(Resume searchKey) {
+        return searchKey == null ? -1 : 1;
     }
 
     @Override

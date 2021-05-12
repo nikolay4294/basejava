@@ -20,6 +20,11 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
+    protected int checkResumeInStorage(Integer searchKey) {
+        return searchKey;
+    }
+
+    @Override
     public void doUpdate(Resume resume, Integer searchKey) {
         listStorage.set(searchKey, resume);
     }
@@ -48,9 +53,9 @@ public class ListStorage extends AbstractStorage<Integer> {
     protected Integer findIndex(String uuid) {
         for (int i = 0; i < listStorage.size(); i++) {
             if (listStorage.get(i).getUuid().equals(uuid)) {
-                return count = i;
+                return i;
             }
         }
-        return count = -1;
+        return -1;
     }
 }

@@ -23,20 +23,20 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     protected abstract List<Resume> doGetList();
 
-    protected static int count = 0;
+    protected abstract int checkResumeInStorage(SK searchKey);
 
-    private SK doExistException(String uuid) {
+    private SK getIndexIfResumeExist(String uuid) {
         SK searchKey = findIndex(uuid);
-        if (count < 0) {
+        if (checkResumeInStorage(searchKey) < 0) {
             LOG.warning("Резюме " + uuid + " не существует");
             throw new NotExistStorageException(uuid);
         }
         return searchKey;
     }
 
-    private SK doNotExistException(String uuid) {
+    private SK getIndexIfResumeNotExist(String uuid) {
         SK searchKey = findIndex(uuid);
-        if (count >= 0) {
+        if (checkResumeInStorage(searchKey) >= 0) {
             LOG.warning("Резюме " + uuid + " уже существует");
             throw new ExistStorageException(uuid);
         }
@@ -46,26 +46,26 @@ public abstract class AbstractStorage<SK> implements Storage {
     public final void update(Resume resume) {
         LOG.info("Update " + resume);
         String uuid = resume.getUuid();
-        doUpdate(resume, doExistException(uuid));
-        System.out.println("Резюме " + resume.getUuid() + " успешно обновлено");
+        doUpdate(resume, getIndexIfResumeExist(uuid));
+        System.out.println("Резюме " + uuid + " успешно обновлено");
     }
 
     public final void save(Resume resume) {
         LOG.info("Save " + resume);
         String uuid = resume.getUuid();
-        doSave(resume, doNotExistException(uuid));
-        System.out.println("Резюме " + resume.getUuid() + " успешно добавлено.");
+        doSave(resume, getIndexIfResumeNotExist(uuid));
+        System.out.println("Резюме " + uuid + " успешно добавлено.");
     }
 
     public final Resume get(String uuid) {
         LOG.info("Get " + uuid);
         System.out.println("Резюме " + uuid + " найдено");
-        return doGet(doExistException(uuid));
+        return doGet(getIndexIfResumeExist(uuid));
     }
 
     public final void delete(String uuid) {
         LOG.info("Delete " + uuid);
-        doDelete(doExistException(uuid));
+        doDelete(getIndexIfResumeExist(uuid));
         System.out.println("Резюме " + uuid + " удалено.");
     }
 
