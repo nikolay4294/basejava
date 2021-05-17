@@ -10,8 +10,13 @@ public class ListStorage extends AbstractStorage<Integer> {
     private List<Resume> listStorage = new ArrayList<>();
 
     @Override
-    public void clear() {
-        listStorage.clear();
+    protected Integer findSearchKey(String uuid) {
+        for (int i = 0; i < listStorage.size(); i++) {
+            if (listStorage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -20,8 +25,8 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected int checkResumeInStorage(Integer searchKey) {
-        return searchKey;
+    protected boolean isResumeExist(Integer searchKey) {
+        return searchKey != null;
     }
 
     @Override
@@ -50,12 +55,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected Integer findIndex(String uuid) {
-        for (int i = 0; i < listStorage.size(); i++) {
-            if (listStorage.get(i).getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
+    public void clear() {
+        listStorage.clear();
     }
 }

@@ -12,8 +12,8 @@ public class MapStorage extends AbstractStorage<String> {
     private Map<String, Resume> mapStorage = new TreeMap<>();
 
     @Override
-    protected String findIndex(String uuid) {
-        return (mapStorage.containsKey(uuid)) ? uuid : null;
+    protected String findSearchKey(String uuid) {
+        return String.valueOf(mapStorage.get(uuid));
     }
 
     @Override
@@ -47,8 +47,8 @@ public class MapStorage extends AbstractStorage<String> {
     }
 
     @Override
-    protected int checkResumeInStorage(String searchKey) {
-        return searchKey == null ? -1 : 1;
+    protected boolean isResumeExist(String searchKey) {
+        return mapStorage.containsKey(searchKey);
     }
 
     @Override
