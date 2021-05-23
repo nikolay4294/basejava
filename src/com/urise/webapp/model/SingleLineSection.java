@@ -2,7 +2,7 @@ package com.urise.webapp.model;
 
 public class SingleLineSection {
 
-    public String singleLineSection;
+    private String singleLineSection;
 
     public String getSingleLineSection() {
         return singleLineSection;

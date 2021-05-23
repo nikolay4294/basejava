@@ -1,17 +1,16 @@
 package com.urise.webapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Skill {
 
-    private ArrayList<List> arrayList;
+    private List<String> arrayList;
 
-    public ArrayList<List> getArrayList() {
+    public List<String> getArrayList() {
         return arrayList;
     }
 
-    public void setArrayList(ArrayList<List> arrayList) {
+    public void setArrayList(List<String> arrayList) {
         this.arrayList = arrayList;
     }
 }

@@ -1,6 +1,7 @@
 package com.urise.webapp.model;
 
-import java.util.HashMap;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,8 +13,8 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    private HashMap<ContactType, String> contacts;
-    private HashMap<SectionType, String> sections;
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private Map<SectionType, String> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -24,7 +25,6 @@ public class Resume implements Comparable<Resume> {
         this.fullName = fullName;
     }
 
-
     public String getUuid() {
         return uuid;
     }
@@ -33,19 +33,19 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-    public HashMap<ContactType, String> getContacts() {
+    public Map<ContactType, String> getContacts() {
         return contacts;
     }
 
-    public HashMap<SectionType, String> getSections() {
+    public Map<SectionType, String> getSections() {
         return sections;
     }
 
-    public void setContacts(HashMap<ContactType, String> contacts) {
+    public void setContacts(Map<ContactType, String> contacts) {
         this.contacts = contacts;
     }
 
-    public void setSections(HashMap<SectionType, String> sections) {
+    public void setSections(Map<SectionType, String> sections) {
         this.sections = sections;
     }
 
@@ -63,13 +63,17 @@ public class Resume implements Comparable<Resume> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Resume)) return false;
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName);
+        return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName) && Objects.equals(contacts, resume.contacts) && Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName);
+        return Objects.hash(uuid, fullName, contacts, sections);
+    }
+
+    public void setContacts(String title, String s) {
     }
 }
+
