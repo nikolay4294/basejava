@@ -13,8 +13,11 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private final String fullName;
-    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-    private Map<SectionType, String> sections = new EnumMap<>(SectionType.class);
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, String> sections = new EnumMap<>(SectionType.class);
+
+    Skill skill = new Skill();
+    Company company = new Company();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -41,17 +44,12 @@ public class Resume implements Comparable<Resume> {
         return sections;
     }
 
-    public void setContacts(Map<ContactType, String> contacts) {
-        this.contacts = contacts;
+    public void setContacts(ContactType ct, String s) {
+        contacts.put(ct, s);
     }
 
-    public void setSections(Map<SectionType, String> sections) {
-        this.sections = sections;
-    }
-
-    @Override
-    public String toString() {
-        return uuid;
+    public void setSections(SectionType st, String s) {
+        sections.put(st, s);
     }
 
     @Override
@@ -73,7 +71,15 @@ public class Resume implements Comparable<Resume> {
         return Objects.hash(uuid, fullName, contacts, sections);
     }
 
-    public void setContacts(String title, String s) {
+    @Override
+    public String toString() {
+        return "Resume{" +
+                "uuid='" + uuid + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", contacts=" + contacts +
+                ", sections=" + sections +
+                ", skill=" + skill +
+                '}';
     }
 }
 

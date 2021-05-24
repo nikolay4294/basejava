@@ -4,13 +4,13 @@ import java.util.List;
 
 public class Skill {
 
-    private List<String> arrayList;
+    private List<String> skillList;
 
-    public List<String> getArrayList() {
-        return arrayList;
+    public List<String> getSkillList() {
+        return skillList;
     }
 
-    public void setArrayList(List<String> arrayList) {
-        this.arrayList = arrayList;
+    public void setSkillList(List<String> skillList) {
+        this.skillList = skillList;
     }
 }
