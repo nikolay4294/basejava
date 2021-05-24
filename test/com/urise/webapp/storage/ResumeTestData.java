@@ -10,8 +10,7 @@ public class ResumeTestData {
 
         Resume resume = new Resume("uuid1", "Григорий Кислин" + "\n");
 
-
-        resume.setContacts(ContactType.PHONE," +7(921) 855-0482 " + "\n");
+        resume.setContacts(ContactType.PHONE, " +7(921) 855-0482 " + "\n");
         resume.setContacts(ContactType.MAIL, " gkislin@yandex.ru " + "\n");
         resume.setContacts(ContactType.GITHUB, " https://github.com/gkislin " + "\n");
         resume.setContacts(ContactType.HOMEPAGE, " http://gkislin.ru " + "\n");
@@ -22,7 +21,7 @@ public class ResumeTestData {
         resume.setSections(SectionType.EDUCATION, " 03/2013 - 05/2013\t\"Functional Programming Principles in Scala\" by Martin Odersky " + "\n");
         resume.setSections(SectionType.EXPERIENCE, " Автор проекта. Создание, организация и проведение Java онлайн проектов и стажировок. " + "\n");
         resume.setSections(SectionType.PERSONAL, " Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры. " + "\n");
-        resume.setSections(SectionType.ACHIEVEMENT, " * С 2013 года: разработка проектов. Разработка Web приложения, Java Enterprise, Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA). Организация онлайн стажировок и ведение проектов. Более 1000 выпускников. " + "\n"+
+        resume.setSections(SectionType.ACHIEVEMENT, " * С 2013 года: разработка проектов. Разработка Web приложения, Java Enterprise, Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA). Организация онлайн стажировок и ведение проектов. Более 1000 выпускников. " + "\n" +
                 "\t" + "* Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk." + "\n" +
                 "\t" + "* Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера." + "\n" +
                 "\t" + "* Реализация c нуля Rich Internet Application приложения на стеке технологий JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Commet, HTML5, Highstock для алгоритмического трейдинга." + "\n" +
@@ -45,10 +44,6 @@ public class ResumeTestData {
                 "\t" + " * Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования" + "\n" +
                 "\t" + " * Родной русский, английский \"upper intermediate\"" + "\n");
         resume.setSections(SectionType.OBJECTIVE, " * Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям " + "\n");
-
-
         System.out.println(resume);
-
     }
-
 }
