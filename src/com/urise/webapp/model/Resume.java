@@ -16,9 +16,6 @@ public class Resume implements Comparable<Resume> {
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, String> sections = new EnumMap<>(SectionType.class);
 
-    Skill skill = new Skill();
-    Company company = new Company();
-
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
@@ -78,7 +75,6 @@ public class Resume implements Comparable<Resume> {
                 ", fullName='" + fullName + '\'' +
                 ", contacts=" + contacts +
                 ", sections=" + sections +
-                ", skill=" + skill +
                 '}';
     }
 }

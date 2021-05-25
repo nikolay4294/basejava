@@ -8,6 +8,8 @@ public class Experience {
     private YearMonth endDate;
     private String heading;
     private String description;
+    private String name;
+    private String url;
 
     public String getName() {
         return name;
@@ -24,9 +26,6 @@ public class Experience {
     public void setUrl(String url) {
         this.url = url;
     }
-
-    private String name;
-    private String url;
 
     public YearMonth getStartDate() {
         return startDate;
