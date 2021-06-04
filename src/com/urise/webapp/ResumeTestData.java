@@ -6,8 +6,11 @@ public class ResumeTestData {
 
     public static void main(String[] args) {
 
-        Resume resume = new Resume("uuid1", "Григорий Кислин" + "\n");
+        System.out.println(createResume("uuid1", "Григорий Кислин"));
+    }
 
+    private static Resume createResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
         resume.setContacts(ContactType.PHONE, " +7(921) 855-0482 " + "\n");
         resume.setContacts(ContactType.MAIL, " gkislin@yandex.ru " + "\n");
         resume.setContacts(ContactType.GITHUB, " https://github.com/gkislin " + "\n");
@@ -53,6 +56,6 @@ public class ResumeTestData {
                 "\tAlcatel\n\t* 09/1997 - 03/1998\t6 месяцев обучения цифровым телефонным сетям (Москва)\n" +
                 "\tСанкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики\n\t* 09/1993 - 07/1996\tАспирантура (программист С, С++)\n\t* 09/1987 - 07/1993\tИнженер (программист Fortran, C)\n" +
                 "\tЗаочная физико-техническая школа при МФТИ\n\t* 09/1984 - 06/1987\tЗакончил с отличием");
-        System.out.println(resume);
+        return resume;
     }
 }
