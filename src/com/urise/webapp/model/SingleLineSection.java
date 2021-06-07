@@ -2,13 +2,13 @@ package com.urise.webapp.model;
 
 public class SingleLineSection {
 
-    private String singleLineSection;
+    private final String personal;
 
-    public String getSingleLineSection() {
-        return singleLineSection;
+    public SingleLineSection(String singleLineSection) {
+        this.personal = singleLineSection;
     }
 
-    public void setSingleLineSection(String singleLineSection) {
-        this.singleLineSection = singleLineSection;
+    public String getPersonal() {
+        return personal;
     }
 }

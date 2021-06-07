@@ -5,6 +5,7 @@ import com.urise.webapp.model.Resume;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,10 +50,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     protected abstract void doWrite(Resume resume, File file) throws IOException;
+    protected abstract Resume doRead(File file);
 
     @Override
     protected Resume doGet(File file) {
-        return null;
+        return doRead(file);
     }
 
     @Override
@@ -62,7 +64,13 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doGetList() {
-        return null;
+        File[] file = directory.listFiles();
+        assert file != null;
+        List<Resume> list = new ArrayList<>(file.length);
+        for(File f : file){
+            list.add(doGet(f));
+        }
+        return list;
     }
 
     @Override
@@ -72,11 +80,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        directory.delete();
+        if(directory.isDirectory()){
+            for (File file : Objects.requireNonNull(directory.listFiles())){
+                file.delete();
+            }
+        }
     }
 
     @Override
     public int size() {
-        return (int) directory.length();
+        File[] file = directory.listFiles();
+        if(file != null){
+            return file.length;
+        } else return 0;
     }
 }

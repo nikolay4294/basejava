@@ -28,26 +28,26 @@ public abstract class AbstractStorage<SK> implements Storage {
     public final void update(Resume resume) {
         LOG.info("Update " + resume);
         String uuid = resume.getUuid();
-        doUpdate(resume, getIndexIfResumeExist(uuid));
+        doUpdate(resume, searchKey(uuid));
         System.out.println("Резюме " + uuid + " успешно обновлено");
     }
 
     public final void save(Resume resume) {
         LOG.info("Save " + resume);
         String uuid = resume.getUuid();
-        doSave(resume, getIndexIfResumeNotExist(uuid));
+        doSave(resume, searchKeyNotExist(uuid));
         System.out.println("Резюме " + uuid + " успешно добавлено.");
     }
 
     public final Resume get(String uuid) {
         LOG.info("Get " + uuid);
         System.out.println("Резюме " + uuid + " найдено");
-        return doGet(getIndexIfResumeExist(uuid));
+        return doGet(searchKey(uuid));
     }
 
     public final void delete(String uuid) {
         LOG.info("Delete " + uuid);
-        doDelete(getIndexIfResumeExist(uuid));
+        doDelete(searchKey(uuid));
         System.out.println("Резюме " + uuid + " удалено.");
     }
 
@@ -57,7 +57,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         return list;
     }
 
-    private SK getIndexIfResumeExist(String uuid) {
+    private SK searchKey(String uuid) {
         SK searchKey = findSearchKey(uuid);
         if (!isResumeExist(searchKey)) {
             LOG.warning("Резюме " + uuid + " не существует");
@@ -66,7 +66,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         return searchKey;
     }
 
-    private SK getIndexIfResumeNotExist(String uuid) {
+    private SK searchKeyNotExist(String uuid) {
         SK searchKey = findSearchKey(uuid);
         if (isResumeExist(searchKey)) {
             LOG.warning("Резюме " + uuid + " уже существует");

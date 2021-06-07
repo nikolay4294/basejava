@@ -5,14 +5,14 @@ import java.util.Objects;
 
 public class Company {
 
-    private List<Experience> list;
+    private final List<Experience> list;
+
+    public Company(List<Experience> list) {
+        this.list = list;
+    }
 
     public List<Experience> getList() {
         return list;
-    }
-
-    public void setList(List<Experience> list) {
-        this.list = list;
     }
 
     @Override

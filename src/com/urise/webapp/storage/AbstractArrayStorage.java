@@ -50,7 +50,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     public List<Resume> doGetList() {
-        Resume[] newStorage = Arrays.copyOfRange(storage, 0, countResume);
+        Resume[] newStorage = Arrays.copyOf(storage, countResume);
         return Arrays.asList(newStorage);
     }
 

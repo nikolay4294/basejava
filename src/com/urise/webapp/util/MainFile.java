@@ -29,11 +29,11 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        File baseDirectory = new File("C:\\Users\\user\\Desktop\\basejava\\basejava");
-        recurs(baseDirectory);
+        File baseDirectory = new File(".\\src\\com\\urise\\webapp");
+        doRecurs(baseDirectory);
     }
 
-    private static void recurs(File baseDirectory) {
+    private static void doRecurs(File baseDirectory) {
         if (baseDirectory.isDirectory()) {
             File[] list = baseDirectory.listFiles();
             if (list != null) {
@@ -41,7 +41,7 @@ public class MainFile {
                     if (name.isFile()) {
                         System.out.println(name.getName() + " - файл");
                     } else {
-                        recurs(name);
+                        doRecurs(name);
                     }
                 }
             }
