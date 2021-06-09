@@ -9,7 +9,7 @@ public class ResumeTestData {
         System.out.println(createResume("uuid1", "Григорий Кислин"));
     }
 
-    private static Resume createResume(String uuid, String fullName) {
+    public static Resume createResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
         resume.setContacts(ContactType.PHONE, " +7(921) 855-0482 " + "\n");
         resume.setContacts(ContactType.MAIL, " gkislin@yandex.ru " + "\n");

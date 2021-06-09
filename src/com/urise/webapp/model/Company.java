@@ -6,13 +6,26 @@ import java.util.Objects;
 public class Company {
 
     private final List<Experience> list;
+    private final String name;
+    private final String url;
 
-    public Company(List<Experience> list) {
+    public Company(List<Experience> list, String name, String url) {
         this.list = list;
+        this.name = name;
+        this.url = url;
     }
+
 
     public List<Experience> getList() {
         return list;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     @Override

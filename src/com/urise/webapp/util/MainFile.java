@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class MainFile {
     public static void main(String[] args) {
-        String filePath = "C:\\Users\\user\\Desktop\\basejava\\basejava\\.gitignore";
+        String filePath = "./.gitignore";
 
         File file = new File(filePath);
         try {
@@ -14,7 +14,7 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException("Error", e);
         }
-        File dir = new File(".\\src\\com\\urise\\webapp");
+        File dir = new File("./src/com/urise/webapp");
         System.out.println(dir.isDirectory());
         String[] list = dir.list();
         if (list != null) {
@@ -29,7 +29,7 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        File baseDirectory = new File(".\\src\\com\\urise\\webapp");
+        File baseDirectory = new File("./src/com/urise/webapp");
         doRecurs(baseDirectory);
     }
 
