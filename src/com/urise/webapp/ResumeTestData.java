@@ -2,23 +2,78 @@ package com.urise.webapp;
 
 import com.urise.webapp.model.*;
 
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ResumeTestData {
 
     public static void main(String[] args) {
-
         System.out.println(createResume("uuid1", "Григорий Кислин"));
     }
 
     public static Resume createResume(String uuid, String fullName) {
-        Resume resume = new Resume(uuid, fullName);
-        resume.setContacts(ContactType.PHONE, " +7(921) 855-0482 " + "\n");
-        resume.setContacts(ContactType.MAIL, " gkislin@yandex.ru " + "\n");
-        resume.setContacts(ContactType.GITHUB, " https://github.com/gkislin " + "\n");
-        resume.setContacts(ContactType.HOMEPAGE, " http://gkislin.ru " + "\n");
-        resume.setContacts(ContactType.LINKED, " https://www.linkedin.com/in/gkislin " + "\n");
-        resume.setContacts(ContactType.SKYPE, " grigory.kislin " + "\n");
-        resume.setContacts(ContactType.STACK, " https://stackoverflow.com/users/548473/grigory-kislin " + "\n");
 
+        Resume resume = new Resume(uuid, fullName);
+
+        List<Experience> experiences = new ArrayList<>();
+        experiences.add(new Experience(YearMonth.of(2013, 10), YearMonth.of(2021, 6), "Java Online Projects", "Автор проекта.\n" +
+                "Создание, организация и проведение Java онлайн проектов и стажировок."));
+        experiences.add(new Experience(YearMonth.of(2014, 10), YearMonth.of(2016, 1), "Wrike", "Старший разработчик (backend)\n" +
+                "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+        experiences.add(new Experience(YearMonth.of(2012, 4), YearMonth.of(2014, 10), "RIT Center", "Java архитектор\n" +
+                "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"));
+        experiences.add(new Experience(YearMonth.of(2010, 12), YearMonth.of(2012, 4), "Luxoft (Deutsche Bank)", "Ведущий программист\n" +
+                "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."));
+        experiences.add(new Experience(YearMonth.of(2008, 6), YearMonth.of(2010, 12), "Yota", "Ведущий специалист\n" +
+                "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)"));
+        experiences.add(new Experience(YearMonth.of(2007, 3), YearMonth.of(2008, 6), "Enkata", "Разработчик ПО\n" +
+                "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining)."));
+        experiences.add(new Experience(YearMonth.of(2005, 1), YearMonth.of(2007, 2), "Siemens AG", "Разработчик ПО\n" +
+                "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix)."));
+        experiences.add(new Experience(YearMonth.of(1997, 9), YearMonth.of(2005, 1), "Alcatel", "Инженер по аппаратному и программному тестированию\n" +
+                "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).\n"));
+
+        List<Company> companies = new ArrayList<>();
+        companies.add(new Company(experiences, "Java Online Projects", "https://javaops.ru/"));
+        companies.add(new Company(experiences, "Wrike", "https://www.wrike.com/"));
+        companies.add(new Company(experiences, "RIT Center", "https://www.rit.com/"));
+        companies.add(new Company(experiences, "Luxoft (Deutsche Bank)", "https://career.luxoft.com/locations/russia/"));
+        companies.add(new Company(experiences, "Yota", "https://www.Yota.com"));
+        companies.add(new Company(experiences, "Enkata", "https://www.pega.com/"));
+        companies.add(new Company(experiences, "Siemens AG", "https://new.siemens.com/ru/ru.html"));
+        companies.add(new Company(experiences, "Alcatel", "http://www.alcatel.ru/"));
+
+        List<String> skills = new ArrayList<>();
+        skills.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
+        skills.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
+        skills.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,");
+        skills.add("MySQL, SQLite, MS SQL, HSQLDB");
+        skills.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
+        skills.add("XML/XSD/XSLT, SQL, C/C++, Unix shell scripts,");
+        skills.add("Java Frameworks: Java 8 (Time API, Streams), Guava, Java Executor, MyBatis, Spring (MVC, Security, Data, Clouds, Boot), JPA (Hibernate, EclipseLink), Guice, GWT(SmartGWT, ExtGWT/GXT), Vaadin, Jasperreports, Apache Commons, Eclipse SWT, JUnit, Selenium (htmlelements).\n");
+        skills.add("Python: Django.");
+        skills.add("JavaScript: jQuery, ExtJS, Bootstrap.js, underscore.js");
+        skills.add("Scala: SBT, Play2, Specs2, Anorm, Spray, Akka");
+        skills.add("Технологии: Servlet, JSP/JSTL, JAX-WS, REST, EJB, RMI, JMS, JavaMail, JAXB, StAX, SAX, DOM, XSLT, MDB, JMX, JDBC, JPA, JNDI, JAAS, SOAP, AJAX, Commet, HTML5, ESB, CMIS, BPMN2, LDAP, OAuth1, OAuth2, JWT.");
+        skills.add("Инструменты: Maven + plugin development, Gradle, настройка Ngnix,");
+        skills.add("администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita, pgBouncer.");
+        skills.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
+        skills.add("Родной русский, английский \"upper intermediate\"");
+
+        SingleLineSection singleLineSection = new SingleLineSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+
+        CompanySection companySection = new CompanySection(companies);
+
+        resume.setContacts(ContactType.PHONE, " +7(921) 855-0482\n");
+        resume.setContacts(ContactType.MAIL, " gkislin@yandex.ru\n");
+        resume.setContacts(ContactType.GITHUB, " https://github.com/gkislin\n");
+        resume.setContacts(ContactType.HOMEPAGE, " http://gkislin.ru\n");
+        resume.setContacts(ContactType.LINKED, " https://www.linkedin.com/in/gkislin\n");
+        resume.setContacts(ContactType.SKYPE, " grigory.kislin\n");
+        resume.setContacts(ContactType.STACK, " https://stackoverflow.com/users/548473/grigory-kislin\n");
+
+        /*
         resume.setSections(SectionType.OBJECTIVE, " Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям " + "\n");
         resume.setSections(SectionType.PERSONAL, " Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры. " + "\n");
         resume.setSections(SectionType.ACHIEVEMENT, " * С 2013 года: разработка проектов. Разработка Web приложения, Java Enterprise, Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA). Организация онлайн стажировок и ведение проектов. Более 1000 выпускников. " + "\n" +
@@ -42,6 +97,7 @@ public class ResumeTestData {
                 "\t* администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher, Flyway, Nagios, iReport, OpenCmis, Bonita, pgBouncer." + "\n" +
                 "\t* Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования" + "\n" +
                 "\t* Родной русский, английский \"upper intermediate\"\n");
+
         resume.setSections(SectionType.EXPERIENCE, " Java Online Projects\n\t* 10/2013 - Сейчас Автор проекта\n\t* Создание, организация и проведение Java онлайн проектов и стажировок. " + "\n" +
                 "\t" + "Wrike\n\t* 10/2014 - 01/2016   Старший разработчик (backend)\n\t* Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO\n." +
                 "\tRIT Center\n\t* 04/2012 - 10/2014   Java архитектор\n\t* Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python\n" +
@@ -56,6 +112,7 @@ public class ResumeTestData {
                 "\tAlcatel\n\t* 09/1997 - 03/1998\t6 месяцев обучения цифровым телефонным сетям (Москва)\n" +
                 "\tСанкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики\n\t* 09/1993 - 07/1996\tАспирантура (программист С, С++)\n\t* 09/1987 - 07/1993\tИнженер (программист Fortran, C)\n" +
                 "\tЗаочная физико-техническая школа при МФТИ\n\t* 09/1984 - 06/1987\tЗакончил с отличием");
+*/
         return resume;
     }
 }

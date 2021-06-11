@@ -15,7 +15,6 @@ public class Company {
         this.url = url;
     }
 
-
     public List<Experience> getList() {
         return list;
     }
