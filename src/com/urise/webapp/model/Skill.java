@@ -13,4 +13,11 @@ public class Skill {
     public List<String> getSkillList() {
         return skillList;
     }
+
+    @Override
+    public String toString() {
+        return "Skill{ " +
+                " Достижния и квалификация " + skillList +
+                '}';
+    }
 }

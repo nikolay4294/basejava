@@ -11,4 +11,11 @@ public class SingleLineSection {
     public String getPersonal() {
         return personal;
     }
+
+    @Override
+    public String toString() {
+        return "SingleLineSection{" +
+                " Личные качества и позиция " + personal + '\'' +
+                '}';
+    }
 }

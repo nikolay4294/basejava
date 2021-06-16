@@ -31,4 +31,14 @@ public class Experience {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public String toString() {
+        return "Experience{" +
+                "startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", heading='" + heading + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

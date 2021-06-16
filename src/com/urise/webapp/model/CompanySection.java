@@ -4,9 +4,17 @@ import java.util.List;
 
 public class CompanySection {
 
-    public final List<Company> company;
+    private final List<Company> company;
 
     public CompanySection(List<Company> company) {
         this.company = company;
+    }
+
+
+    @Override
+    public String toString() {
+        return "CompanySection{" +
+                "company=" + company +
+                '}';
     }
 }
