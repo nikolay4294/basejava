@@ -92,7 +92,7 @@ public class ResumeTestData {
 
         resume.setSections(SectionType.OBJECTIVE, personal);
         resume.setSections(SectionType.QUALIFICATIONS, skill);
-        resume.setSections(SectionType.EXPERIENCE, companySection);
+        resume.setSections(SectionType.EXPERIENCE, experiences);
         return resume;
     }
 }

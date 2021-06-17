@@ -34,11 +34,10 @@ public class Experience {
 
     @Override
     public String toString() {
-        return "Experience{" +
+        return "Опыт работы и образование\n" +
                 "startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", heading='" + heading + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+                " endDate=" + endDate +
+                " heading='" + heading + '\'' +
+                " description='" + description;
     }
 }

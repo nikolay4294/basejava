@@ -14,8 +14,6 @@ public class SingleLineSection {
 
     @Override
     public String toString() {
-        return "SingleLineSection{" +
-                " Личные качества и позиция " + personal + '\'' +
-                '}';
+        return " Личные качества и позиция\n " + personal;
     }
 }
