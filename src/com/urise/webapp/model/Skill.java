@@ -16,8 +16,6 @@ public class Skill {
 
     @Override
     public String toString() {
-        return
-                " Достижния и квалификация\n " + skillList +
-                '}';
+        return " Достижния и квалификация\n " + skillList;
     }
 }
