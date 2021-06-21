@@ -29,22 +29,22 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        File baseDirectory = new File("./src/com/urise/webapp");
-        doRecurs(baseDirectory);
+        doRecurs(dir);
     }
 
-    private static void doRecurs(File baseDirectory) {
-        if (baseDirectory.isDirectory()) {
-            File[] list = baseDirectory.listFiles();
+    private static void doRecurs(File dir) {
+        if (dir.isDirectory()) {
+            File[] list = dir.listFiles();
             if (list != null) {
                 for (File name : list) {
                     if (name.isFile()) {
-                        System.out.println(name.getName() + " - файл");
+                        System.out.println("File - " + name.getName());
                     } else {
+                        System.out.println("Directory - " + name.getName());
                         doRecurs(name);
                     }
                 }
             }
-        } else System.out.println(baseDirectory.getName() + " не является папкой");
+        } else System.out.println(dir.getName() + " не является папкой");
     }
 }

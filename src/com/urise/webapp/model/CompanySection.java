@@ -4,17 +4,17 @@ import java.util.List;
 
 public class CompanySection {
 
-    private final List<Company> company;
+    private final List<OrganizationSection> organizationSection;
 
-    public CompanySection(List<Company> company) {
-        this.company = company;
+    public CompanySection(List<OrganizationSection> organizationSection) {
+        this.organizationSection = organizationSection;
     }
 
 
     @Override
     public String toString() {
         return "CompanySection{" +
-                "company=" + company +
+                "company=" + organizationSection +
                 '}';
     }
 }

@@ -10,8 +10,9 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private final String fullName;
+
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-    private final Map<SectionType, Object> sections = new EnumMap<>(SectionType.class);
+    private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
 
     public Resume(String fullName) {
@@ -19,6 +20,8 @@ public class Resume implements Comparable<Resume> {
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
@@ -31,20 +34,18 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-    public Map<ContactType, String> getContacts() {
-        return contacts;
+    public String getContact(ContactType type){
+        return contacts.get(type);
     }
 
-    public Map<SectionType, Object> getSections() {
-        return sections;
+    public Section getSection(SectionType type){
+        return sections.get(type);
     }
 
-    public void setContacts(ContactType ct, String s) {
-        contacts.put(ct, s);
-    }
+    public void addContact(ContactType type, String value) { contacts.put(type, value); }
 
-    public void setSections(SectionType st, Object o) {
-        sections.put(st, o);
+    public void addSections(SectionType st, Section s){
+        sections.put(st, s);
     }
 
     @Override
