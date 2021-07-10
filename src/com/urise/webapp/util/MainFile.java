@@ -40,7 +40,7 @@ public class MainFile {
                     if (name.isFile()) {
                         System.out.println("\t" + "File - " + name.getName());
                     } else {
-                        System.out.println("Directory - " + name.getName());
+                        System.out.println("\t" + "Directory - " + name.getName());
                         doRecurs(name);
                     }
                 }
