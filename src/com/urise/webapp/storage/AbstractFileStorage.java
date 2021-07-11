@@ -10,6 +10,15 @@ import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private File directory;
+    Strategy strategy;
+
+    public void setStrategy(Strategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void executeStrategy() {
+        //strategy.save(Resume resume, OutputStream os);
+    }
 
     protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
 
@@ -33,12 +42,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doUpdate(Resume resume, File file) {
-        if (file.exists()) {
-            try {
-                doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
-            } catch (IOException e) {
-                throw new StorageException("Update error", file.getName(), e);
-            }
+        try {
+            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+        } catch (IOException e) {
+            throw new StorageException("Update error", file.getName(), e);
         }
     }
 
@@ -70,13 +77,15 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doGetList() {
-        File[] file = directory.listFiles();
-        assert file != null;
-        List<Resume> list = new ArrayList<>(file.length);
-        for (File f : file) {
-            list.add(doGet(f));
+        try {
+            List<Resume> list = new ArrayList<>(createFilesList(directory).length);
+            for (File f : createFilesList(directory)) {
+                list.add(doGet(f));
+            }
+            return list;
+        } catch (StorageException e) {
+            throw new StorageException("File not found", null);
         }
-        return list;
     }
 
     @Override
@@ -86,20 +95,23 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                file.delete();
-            }
+        if (createFilesList(directory) == null) {
+            throw new StorageException("File not delete", null);
+        }
+        for (File file : createFilesList(directory)) {
+            file.delete();
         }
     }
 
     @Override
     public int size() {
-        String[] list = directory.list();
-        if (list == null) {
+        if (createFilesList(directory) == null) {
             throw new StorageException("Directory read  error", null);
         }
-        return list.length;
+        return createFilesList(directory).length;
+    }
+
+    private static File[] createFilesList(File directory) {
+        return directory.listFiles();
     }
 }

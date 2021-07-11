@@ -2,6 +2,6 @@ package com.urise.webapp.storage;
 
 public class ObjectStreamPathStorageTest extends AbstractStorageTest{
     public ObjectStreamPathStorageTest() {
-        super(new ObjectStreamPathStorage("C:\\Users\\user\\Desktop\\storage"));
+        super(new ObjectStreamPathStorage(STORAGE_DIR.getAbsolutePath()));
     }
 }
