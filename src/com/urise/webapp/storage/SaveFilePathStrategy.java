@@ -16,16 +16,14 @@ public class SaveFilePathStrategy implements Strategy{
     }
 
     @Override
-    public void read(InputStream is) {
-        /*
-        try(ObjectInputStream ois = new ObjectInputStream(is)) {
+    public Resume read(InputStream is) {
+        try (ObjectInputStream ois = new ObjectInputStream(is)) {
             return (Resume) ois.readObject();
         } catch (ClassNotFoundException e) {
             throw new StorageException("Error read resume", null, e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-         */
+        return null;
     }
-
-
 }

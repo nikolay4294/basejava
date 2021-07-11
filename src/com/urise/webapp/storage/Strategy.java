@@ -7,5 +7,5 @@ import java.io.OutputStream;
 
 public interface Strategy {
     void save(Resume resume, OutputStream os);
-    void read(InputStream is);
+    Resume read(InputStream is);
 }
