@@ -16,8 +16,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         this.strategy = strategy;
     }
 
-    public void executeStrategy() {
-        //strategy.save(Resume resume, OutputStream os);
+    public void executeStrategy(Resume resume, OutputStream os) {
+        strategy.save(resume, os);
     }
 
     protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;

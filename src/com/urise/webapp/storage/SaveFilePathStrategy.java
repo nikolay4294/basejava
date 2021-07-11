@@ -5,7 +5,7 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public class SavePath implements Strategy{
+public class SaveFilePathStrategy implements Strategy{
     @Override
     public void save(Resume resume, OutputStream os) {
         try(ObjectOutputStream oos = new ObjectOutputStream(os)) {
@@ -26,4 +26,6 @@ public class SavePath implements Strategy{
 
          */
     }
+
+
 }

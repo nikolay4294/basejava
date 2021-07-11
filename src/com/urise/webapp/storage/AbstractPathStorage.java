@@ -20,8 +20,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         this.strategy = strategy;
     }
 
-    public void executeStrategy() {
-        //  strategy.save();
+    public void executeStrategy(Resume resume, OutputStream os) {
+        strategy.save(resume,os);
     }
 
     protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
