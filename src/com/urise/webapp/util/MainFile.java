@@ -38,9 +38,9 @@ public class MainFile {
             if (list != null) {
                 for (File name : list) {
                     if (name.isFile()) {
-                        System.out.println("\tFile - " + name.getName());
+                        System.out.println("\t\tFile - " + name.getName());
                     } else {
-                        System.out.println("Directory - " + name.getName());
+                        System.out.println("\tDirectory - " + name.getName());
                         doRecurs(name);
                     }
                 }

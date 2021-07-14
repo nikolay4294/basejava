@@ -21,7 +21,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
     public void executeSaveStrategy(Resume resume, OutputStream os) {
-        strategy.save(resume,os);
+        strategy.save(resume, os);
     }
 
     public void executeReadStrategy(InputStream is) {
@@ -84,7 +84,11 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doGetList() {
-        return createPathList(directory).map(this::doGet).collect(Collectors.toList());
+        try {
+            return createPathList(directory).map(this::doGet).collect(Collectors.toList());
+        } catch (StorageException e) {
+            throw new StorageException("Get list error", null);
+        }
     }
 
     @Override
