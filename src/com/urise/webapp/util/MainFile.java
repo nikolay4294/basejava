@@ -3,6 +3,9 @@ package com.urise.webapp.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class MainFile {
     public static void main(String[] args) {
@@ -14,7 +17,8 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException("Error", e);
         }
-        File dir = new File("./src/com/urise/webapp");
+        //File dir = new File("./src/com/urise/webapp");
+        File dir = new File("C:\\Users\\user\\Desktop\\basejava1\\src");
         System.out.println(dir.isDirectory());
         String[] list = dir.list();
         if (list != null) {
@@ -35,16 +39,16 @@ public class MainFile {
     private static void doRecurs(File dir) {
         if (dir.isDirectory()) {
             File[] list = dir.listFiles();
-            if (list != null) {
-                for (File name : list) {
-                    if (name.isFile()) {
-                        System.out.println("\t\tFile - " + name.getName());
-                    } else {
-                        System.out.println("\tDirectory - " + name.getName());
-                        doRecurs(name);
+                if (list != null) {
+                    for (File name : list) {
+                        if (name.isFile()) {
+                            System.out.println("\t\tFile - " + name.getName());
+                        } else {
+                            System.out.println("\tDirectory - " + name.getName());
+                            doRecurs(name);
+                        }
                     }
                 }
-            }
-        } else System.out.println(dir.getName() + " не является папкой");
+            } else System.out.println(dir.getName() + " не является папкой");
     }
 }

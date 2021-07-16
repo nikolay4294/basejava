@@ -6,38 +6,18 @@ import com.urise.webapp.model.Resume;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
+
     private Path directory;
     Strategy strategy;
 
-    public void setStrategy(Strategy strategy) {
+    public PathStorage(Path directory, Strategy strategy) {
+        this.directory = directory;
         this.strategy = strategy;
-    }
-
-    public void executeSaveStrategy(Resume resume, OutputStream os) {
-        strategy.save(resume, os);
-    }
-
-    public void executeReadStrategy(InputStream is) {
-        strategy.read(is);
-    }
-
-    protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
-
-    protected abstract Resume doRead(InputStream is) throws IOException;
-
-    protected AbstractPathStorage(String dir) {
-        directory = Paths.get(dir);
-        Objects.requireNonNull(directory, "directory must not be null");
-        if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
-            throw new IllegalArgumentException(dir + " is not directory or is not writable");
-        }
     }
 
     @Override
@@ -48,7 +28,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume resume, Path path) {
         try {
-            doWrite(resume, new BufferedOutputStream(Files.newOutputStream((path))));
+            //doWrite(resume, new BufferedOutputStream(Files.newOutputStream((path))));
+            strategy.doWrite(resume, Files.newOutputStream((path)));
         } catch (IOException e) {
             throw new StorageException("Update resume is error", path.getFileName().toString());
         }
@@ -67,7 +48,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(Files.newInputStream(path)));
+            //return doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return strategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Resume get error", path.getFileName().toString());
         }

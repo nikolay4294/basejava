@@ -1,7 +1,8 @@
 package com.urise.webapp.storage;
 
-public class ObjectStreamPathStorageTest extends AbstractStorageTest{
+public class ObjectStreamPathStorageTest extends AbstractStorageTest {
+
     public ObjectStreamPathStorageTest() {
-        super(new ObjectStreamPathStorage(STORAGE_DIR.getAbsolutePath()));
+        super(new PathStorage(STORAGE_DIR.toPath(), new ObjectStreamStorage()));
     }
 }
