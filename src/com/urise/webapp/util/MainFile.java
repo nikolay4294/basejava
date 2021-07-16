@@ -17,8 +17,8 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException("Error", e);
         }
-        //File dir = new File("./src/com/urise/webapp");
-        File dir = new File("C:\\Users\\user\\Desktop\\basejava1\\src");
+        File dir = new File("./src/com/urise/webapp");
+        //File dir = new File("C:\\Users\\user\\Desktop\\basejava1\\src");
         System.out.println(dir.isDirectory());
         String[] list = dir.list();
         if (list != null) {
@@ -32,23 +32,31 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        doRecurs(dir);
+        doRecurs(dir, 0);
     }
 
-    private static void doRecurs(File dir) {
+    static String repeat(int n, String value) {
+        return new String(new char[n]).replace("\0", value);
+    }
+
+    static void doRecurs(File dir, int level) {
+        final String indent = repeat(level, "    ");
+
         if (dir.isDirectory()) {
             File[] list = dir.listFiles();
-                if (list != null) {
-                    for (File name : list) {
-                        if (name.isFile()) {
-                            System.out.println("\t\tFile - " + name.getName());
-                        } else {
-                            System.out.println("\tDirectory - " + name.getName());
-                            doRecurs(name);
-                        }
-                    }
+            if (list == null)
+                return;
+
+            for (File name : list) {
+                if (name.isFile()) {
+                    System.out.println(indent + "File - " + name.getName());
+                } else {
+                    System.out.println(indent + "Directory - " + name.getName());
+                    doRecurs(name, level + 1);
                 }
-            } else System.out.println(dir.getName() + " не является папкой");
+            }
+        } else {
+            System.out.println(dir.getName() + " не является папкой");
+        }
     }
 }
