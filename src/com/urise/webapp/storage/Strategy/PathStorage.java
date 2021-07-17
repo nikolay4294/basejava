@@ -1,7 +1,8 @@
-package com.urise.webapp.storage;
+package com.urise.webapp.storage.Strategy;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.AbstractStorage;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,8 +13,8 @@ import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
 
-    private Path directory;
-    Strategy strategy;
+    private static Path directory;
+    private Strategy strategy;
 
     public PathStorage(Path directory, Strategy strategy) {
         this.directory = directory;
@@ -28,8 +29,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume resume, Path path) {
         try {
-            //doWrite(resume, new BufferedOutputStream(Files.newOutputStream((path))));
-            strategy.doWrite(resume, Files.newOutputStream((path)));
+            strategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream((path))));
         } catch (IOException e) {
             throw new StorageException("Update resume is error", path.getFileName().toString());
         }
@@ -48,7 +48,6 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            //return doRead(new BufferedInputStream(Files.newInputStream(path)));
             return strategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Resume get error", path.getFileName().toString());
@@ -66,11 +65,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doGetList() {
-        try {
-            return createPathList(directory).map(this::doGet).collect(Collectors.toList());
-        } catch (StorageException e) {
-            throw new StorageException("Get list error", null);
-        }
+        return createPathList().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
@@ -79,23 +74,16 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    public void clear() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error ", null);
-        }
+    public void clear() throws IOException {
+        Files.list(directory).forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        if (createPathList(directory) == null) {
-            throw new StorageException("Directory read  error", null);
-        }
-        return (int) createPathList(directory).map(this::doGet).count();
+        return (int) createPathList().map(this::doGet).count();
     }
 
-    private static Stream<Path> createPathList(Path directory) {
+    private static Stream<Path> createPathList() {
         try {
             return Files.list(directory);
         } catch (IOException e) {

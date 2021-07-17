@@ -1,15 +1,16 @@
-package com.urise.webapp.storage;
+package com.urise.webapp.storage.Strategy;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.AbstractStorage;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileStorage extends AbstractStorage<File> {
-    private File directory;
-    Strategy strategy;
+    private static File directory;
+    private Strategy strategy;
 
     public FileStorage(File directory, Strategy strategy) {
         this.directory = directory;
@@ -24,9 +25,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(Resume resume, File file) {
         try {
-            //doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
             strategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
-            //fileStorage.strategy.doWrite();
         } catch (IOException e) {
             throw new StorageException("Update error", file.getName(), e);
         }
@@ -45,7 +44,6 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File file) {
         try {
-            //return doRead(new BufferedInputStream(new FileInputStream(file)));
             return strategy.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File delete error", file.getName());
@@ -61,15 +59,11 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doGetList() {
-        try {
-            List<Resume> list = new ArrayList<>(createFilesList(directory).length);
-            for (File f : createFilesList(directory)) {
-                list.add(doGet(f));
-            }
-            return list;
-        } catch (StorageException e) {
-            throw new StorageException("File not found", null);
+        List<Resume> list = new ArrayList<>(createFilesList().length);
+        for (File f : createFilesList()) {
+            list.add(doGet(f));
         }
+        return list;
     }
 
     @Override
@@ -79,23 +73,21 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        if (createFilesList(directory) == null) {
-            throw new StorageException("File not delete", null);
-        }
-        for (File file : createFilesList(directory)) {
+        for (File file : createFilesList()) {
             file.delete();
         }
     }
 
     @Override
     public int size() {
-        if (createFilesList(directory) == null) {
-            throw new StorageException("Directory read  error", null);
-        }
-        return createFilesList(directory).length;
+        return createFilesList().length;
     }
 
-    private static File[] createFilesList(File directory) {
-        return directory.listFiles();
+    private static File[] createFilesList() {
+        try {
+            return directory.listFiles();
+        } catch (StorageException e) {
+            throw new StorageException("createFileList error", null);
+        }
     }
 }

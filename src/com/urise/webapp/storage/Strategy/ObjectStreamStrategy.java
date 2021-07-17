@@ -1,11 +1,12 @@
-package com.urise.webapp.storage;
+package com.urise.webapp.storage.Strategy;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.Strategy.Strategy;
 
 import java.io.*;
 
-public class ObjectStreamStorage implements Strategy {
+public class ObjectStreamStrategy implements Strategy {
 
     @Override
     public void doWrite(Resume resume, OutputStream os) throws IOException {
