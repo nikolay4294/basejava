@@ -1,8 +1,8 @@
-package com.urise.webapp.storage.Strategy;
+package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.AbstractStorage;
+import com.urise.webapp.storage.Strategy.Strategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -59,9 +59,9 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doGetList() {
-        List<Resume> list = new ArrayList<>(createFilesList().length);
-        for (File f : createFilesList()) {
-            list.add(doGet(f));
+        List<Resume> list = new ArrayList<>(filesList.length);
+        for (File file : filesList) {
+            list.add(doGet(file));
         }
         return list;
     }
@@ -73,21 +73,19 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        for (File file : createFilesList()) {
+        for (File file : filesList) {
             file.delete();
         }
     }
 
     @Override
     public int size() {
-        return createFilesList().length;
+        return filesList.length;
     }
 
+    private File[] filesList = createFilesList();
+
     private static File[] createFilesList() {
-        try {
-            return directory.listFiles();
-        } catch (StorageException e) {
-            throw new StorageException("createFileList error", null);
-        }
+        return directory.listFiles();
     }
 }

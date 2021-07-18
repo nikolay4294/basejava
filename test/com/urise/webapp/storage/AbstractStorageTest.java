@@ -47,7 +47,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void clear() throws IOException {
+    public void clear() {
         storage.clear();
         Assert.assertEquals(0, storage.size());
     }

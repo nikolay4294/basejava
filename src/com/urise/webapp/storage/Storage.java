@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Storage {
 
-    void clear() throws IOException;
+    void clear();
 
     void update(Resume r);
 

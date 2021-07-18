@@ -1,8 +1,8 @@
-package com.urise.webapp.storage.Strategy;
+package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.AbstractStorage;
+import com.urise.webapp.storage.Strategy.Strategy;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -65,7 +65,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doGetList() {
-        return createPathList().map(this::doGet).collect(Collectors.toList());
+        return pathList.map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
@@ -74,14 +74,16 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    public void clear() throws IOException {
-        Files.list(directory).forEach(this::doDelete);
+    public void clear() {
+        pathList.forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        return (int) createPathList().map(this::doGet).count();
+        return (int) pathList.map(this::doGet).count();
     }
+
+    private Stream<Path> pathList = createPathList();
 
     private static Stream<Path> createPathList() {
         try {
