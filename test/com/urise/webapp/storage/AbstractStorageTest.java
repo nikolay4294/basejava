@@ -39,7 +39,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
         storage.clear();
         storage.save(R2);
         storage.save(R1);

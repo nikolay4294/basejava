@@ -65,7 +65,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doGetList() {
-        return pathList.map(this::doGet).collect(Collectors.toList());
+        return createPathList().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
@@ -75,15 +75,13 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        pathList.forEach(this::doDelete);
+        createPathList().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        return (int) pathList.map(this::doGet).count();
+        return (int) createPathList().map(this::doGet).count();
     }
-
-    private Stream<Path> pathList = createPathList();
 
     private static Stream<Path> createPathList() {
         try {

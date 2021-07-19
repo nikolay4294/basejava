@@ -12,6 +12,7 @@ public class FileStorage extends AbstractStorage<File> {
     private static File directory;
     private Strategy strategy;
 
+
     public FileStorage(File directory, Strategy strategy) {
         this.directory = directory;
         this.strategy = strategy;
@@ -59,6 +60,8 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doGetList() {
+        File[] filesList = createFilesList();
+
         List<Resume> list = new ArrayList<>(filesList.length);
         for (File file : filesList) {
             list.add(doGet(file));
@@ -73,17 +76,15 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        for (File file : filesList) {
+        for (File file : createFilesList()) {
             file.delete();
         }
     }
 
     @Override
     public int size() {
-        return filesList.length;
+        return createFilesList().length;
     }
-
-    private File[] filesList = createFilesList();
 
     private static File[] createFilesList() {
         return directory.listFiles();
