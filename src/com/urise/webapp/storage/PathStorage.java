@@ -2,21 +2,23 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.Strategy.Strategy;
+import com.urise.webapp.storage.Strategy.Serializer;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
 
     private static Path directory;
-    private Strategy strategy;
+    private Serializer strategy;
 
-    public PathStorage(Path directory, Strategy strategy) {
+    public PathStorage(Path directory, Serializer strategy) {
+        Objects.requireNonNull(directory, "directory must no be null");
         this.directory = directory;
         this.strategy = strategy;
     }
@@ -31,7 +33,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             strategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream((path))));
         } catch (IOException e) {
-            throw new StorageException("Update resume is error", path.getFileName().toString());
+            throw new StorageException("Update resume is error", getFileName(path), e);
         }
     }
 
@@ -40,7 +42,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("Save resume error ", path.getFileName().toString());
+            throw new StorageException("Save resume error ", getFileName(path), e);
         }
         doUpdate(resume, path);
     }
@@ -50,7 +52,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return strategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("Resume get error", path.getFileName().toString());
+            throw new StorageException("Resume get error", getFileName(path), e);
         }
     }
 
@@ -59,7 +61,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("Delete error", path.getFileName().toString());
+            throw new StorageException("Delete error", getFileName(path), e);
         }
     }
 
@@ -87,7 +89,11 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("createPathList error", null);
+            throw new StorageException("createPathList error", null, e);
         }
+    }
+
+    private String getFileName(Path path){
+        return path.getFileName().toString();
     }
 }

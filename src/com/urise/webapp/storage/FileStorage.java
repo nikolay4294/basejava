@@ -2,18 +2,20 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.Strategy.Strategy;
+import com.urise.webapp.storage.Strategy.Serializer;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FileStorage extends AbstractStorage<File> {
-    private static File directory;
-    private Strategy strategy;
+    private File directory;
+    private Serializer strategy;
 
 
-    public FileStorage(File directory, Strategy strategy) {
+    public FileStorage(File directory, Serializer strategy) {
+        Objects.requireNonNull(directory, "directory must no be null");
         this.directory = directory;
         this.strategy = strategy;
     }
@@ -47,7 +49,7 @@ public class FileStorage extends AbstractStorage<File> {
         try {
             return strategy.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
-            throw new StorageException("File delete error", file.getName());
+            throw new StorageException("File delete error", file.getName(), e);
         }
     }
 
@@ -86,7 +88,9 @@ public class FileStorage extends AbstractStorage<File> {
         return createFilesList().length;
     }
 
-    private static File[] createFilesList() {
-        return directory.listFiles();
+    private File[] createFilesList() {
+        if(directory.listFiles() == null){
+            throw new StorageException("createFilesList error", null);
+        } else return directory.listFiles();
     }
 }

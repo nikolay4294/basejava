@@ -1,20 +1,27 @@
 package com.urise.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ListSection extends Section implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final List<String> items;
+    private List<String> items;
 
     public ListSection(String... items) { this(Arrays.asList(items)); }
 
     public ListSection(List<String> items) {
         Objects.requireNonNull(items, "items mast not be null");
         this.items = items;
+    }
+
+    public ListSection() {
+
     }
 
     public List<String> getItems() {

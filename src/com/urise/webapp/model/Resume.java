@@ -1,17 +1,23 @@
 package com.urise.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+
 public class Resume implements Comparable<Resume>, Serializable {
     private static final long serialVersionUID = 1L;
 
     // Unique identifier
-    private final String uuid;
-    private final String fullName;
+    private String uuid;
+    private String fullName;
 
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
@@ -28,6 +34,10 @@ public class Resume implements Comparable<Resume>, Serializable {
         this.fullName = fullName;
     }
 
+    public Resume() {
+
+    }
+
     public String getUuid() {
         return uuid;
     }
@@ -36,12 +46,12 @@ public class Resume implements Comparable<Resume>, Serializable {
         return fullName;
     }
 
-    public String getContact(ContactType type){
-        return contacts.get(type);
+    public Map<ContactType, String> getContacts() {
+        return contacts;
     }
 
-    public Section getSection(SectionType type){
-        return sections.get(type);
+    public Map<SectionType, Section> getSections() {
+        return sections;
     }
 
     public void addContact(ContactType type, String value) { contacts.put(type, value); }
@@ -57,19 +67,6 @@ public class Resume implements Comparable<Resume>, Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Resume)) return false;
-        Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName) && Objects.equals(contacts, resume.contacts) && Objects.equals(sections, resume.sections);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, fullName, contacts, sections);
-    }
-
-    @Override
     public String toString() {
         return "Resume{" +
                 "uuid='" + uuid + '\'' +
@@ -77,5 +74,18 @@ public class Resume implements Comparable<Resume>, Serializable {
                 ", contacts=" + contacts +
                 ", sections=" + sections +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Resume resume = (Resume) o;
+        return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName) && Objects.equals(contacts, resume.contacts) && Objects.equals(sections, resume.sections);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, fullName, contacts, sections);
     }
 }
