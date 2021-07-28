@@ -1,9 +1,9 @@
 package com.urise.webapp.storage.Strategy;
 
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 
 import java.io.*;
+import java.util.List;
 import java.util.Map;
 
 public class DataStreamSerializer implements Serializer {
@@ -13,13 +13,36 @@ public class DataStreamSerializer implements Serializer {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
-            //маркер, что бы считывались только контакты.
             dos.writeInt(contacts.size());
+
             for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             }
-            //TODO implements sections
+
+            Map<SectionType, Section> sections = resume.getSections();
+            dos.writeInt(sections.size());
+
+            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+                dos.writeUTF(String.valueOf(entry.getKey()));
+                switch (entry.getKey().name()) {
+                    case ("PERSONAL"):
+                    case ("OBJECTIVE"):
+                        dos.writeUTF(String.valueOf((sections.get(entry.getKey()))));
+                        //dos.writeUTF(Objects.requireNonNull(getTextSection()));
+                        break;
+                    case ("ACHIEVEMENT"):
+                    case ("QUALIFICATIONS"):
+                        dos.writeUTF(String.valueOf(sections.get(entry.getKey())));
+                        //dos.writeUTF(Objects.requireNonNull(getListSection()));
+                        break;
+                    case ("EXPERIENCE"):
+                    case ("EDUCATION"):
+                        dos.writeUTF(String.valueOf(sections.get(entry.getKey())));
+                        //dos.writeUTF(Objects.requireNonNull(getOrganizationSection()));
+                        break;
+                }
+            }
         }
     }
 
@@ -33,8 +56,39 @@ public class DataStreamSerializer implements Serializer {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            //TODO implements sections
-            return resume;
+
+            int sectionsSize = dis.readInt();
+            for (int i = 0; i < sectionsSize; i++) {
+                switch (dis.readUTF()) {
+                    case ("PERSONAL"):
+                    case ("OBJECTIVE"):
+                        resume.addSections(SectionType.PERSONAL, );
+                }
+            }
+            return null;
         }
+    }
+
+    private String getListSection() {
+        ListSection ls = new ListSection();
+        List<String> item = ls.getItems();
+        for (String value : item) {
+            return value;
+        }
+        return null;
+    }
+
+    private String getTextSection() {
+        TextSection ts = new TextSection();
+        return ts.getContent();
+    }
+
+    private String getOrganizationSection() {
+        OrganizationSection os = new OrganizationSection();
+        List<Organization> organizations = os.getOrganizations();
+        for (Organization o : organizations) {
+            return String.valueOf(o.getPositions());
+        }
+        return null;
     }
 }
