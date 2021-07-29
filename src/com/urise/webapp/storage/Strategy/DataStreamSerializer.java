@@ -60,18 +60,13 @@ public class DataStreamSerializer implements Serializer {
                             }
                         });
 
-                        List<Organization.Position> positions = new ArrayList<>();
-                        organizationList.forEach(o -> o.getPositions().add((Organization.Position) positions));
-                        positions.forEach(p -> {
-                            try {
-                                dos.writeUTF(p.getDescription());
-                                dos.writeUTF(p.getTitle());
-                                localDate(dos, p.getStartDate());
-                                localDate(dos, p.getEndDate());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
+                        for (int i = 0; i < organizationList.size(); i++){
+                            Organization.Position p = organizationList.get(i).getPositions().get(i);
+                            dos.writeUTF(p.getDescription());
+                            dos.writeUTF(p.getTitle());
+                            localDate(dos, p.getStartDate());
+                            localDate(dos, p.getEndDate());
+                        }
                     break;
                 }
             }
