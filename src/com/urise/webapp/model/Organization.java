@@ -58,6 +58,10 @@ public class Organization implements Serializable {
         return Objects.hash(homePage, positions);
     }
 
+    public Link getHomePage() {
+        return homePage;
+    }
+
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
         private static final long serialVersionUID = 1L;

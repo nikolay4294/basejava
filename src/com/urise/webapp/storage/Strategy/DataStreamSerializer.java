@@ -3,6 +3,8 @@ package com.urise.webapp.storage.Strategy;
 import com.urise.webapp.model.*;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,26 +26,61 @@ public class DataStreamSerializer implements Serializer {
             dos.writeInt(sections.size());
 
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
-                dos.writeUTF(String.valueOf(entry.getKey()));
+                SectionType sectionType = entry.getKey();
+                Section section = entry.getValue();
+
                 switch (entry.getKey().name()) {
                     case ("PERSONAL"):
                     case ("OBJECTIVE"):
-                        dos.writeUTF(String.valueOf((sections.get(entry.getKey()))));
-                        //dos.writeUTF(Objects.requireNonNull(getTextSection()));
+                        dos.writeUTF(((TextSection) section).getContent());
                         break;
                     case ("ACHIEVEMENT"):
                     case ("QUALIFICATIONS"):
-                        dos.writeUTF(String.valueOf(sections.get(entry.getKey())));
-                        //dos.writeUTF(Objects.requireNonNull(getListSection()));
+                        List<String> list = new ArrayList<>(((ListSection) section).getItems());
+                        dos.writeInt(list.size());
+                        list.forEach(s -> {
+                            try {
+                                dos.writeUTF(s);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
                         break;
                     case ("EXPERIENCE"):
                     case ("EDUCATION"):
-                        dos.writeUTF(String.valueOf(sections.get(entry.getKey())));
-                        //dos.writeUTF(Objects.requireNonNull(getOrganizationSection()));
-                        break;
+                        List<Organization> organizationList = new ArrayList<>(((OrganizationSection) section).getOrganizations());
+                        dos.writeInt(organizationList.size());
+
+                        organizationList.forEach(o -> {
+                            try {
+                                dos.writeUTF((o.getHomePage()).getName());
+                                dos.writeUTF((o.getHomePage()).getUrl());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+
+                        List<Organization.Position> positions = new ArrayList<>();
+                        organizationList.forEach(o -> o.getPositions().add((Organization.Position) positions));
+                        positions.forEach(p -> {
+                            try {
+                                dos.writeUTF(p.getDescription());
+                                dos.writeUTF(p.getTitle());
+                                localDate(dos, p.getStartDate());
+                                localDate(dos, p.getEndDate());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    break;
                 }
             }
         }
+    }
+
+    private void localDate(DataOutputStream dos, LocalDate ld) throws IOException {
+        dos.writeInt(ld.getDayOfMonth());
+        dos.writeInt(ld.getDayOfYear());
     }
 
     @Override
@@ -62,33 +99,13 @@ public class DataStreamSerializer implements Serializer {
                 switch (dis.readUTF()) {
                     case ("PERSONAL"):
                     case ("OBJECTIVE"):
-                        resume.addSections(SectionType.PERSONAL, );
+
+
                 }
             }
             return null;
         }
+
     }
 
-    private String getListSection() {
-        ListSection ls = new ListSection();
-        List<String> item = ls.getItems();
-        for (String value : item) {
-            return value;
-        }
-        return null;
-    }
-
-    private String getTextSection() {
-        TextSection ts = new TextSection();
-        return ts.getContent();
-    }
-
-    private String getOrganizationSection() {
-        OrganizationSection os = new OrganizationSection();
-        List<Organization> organizations = os.getOrganizations();
-        for (Organization o : organizations) {
-            return String.valueOf(o.getPositions());
-        }
-        return null;
-    }
 }
