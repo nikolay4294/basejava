@@ -14,6 +14,7 @@ public class DataStreamSerializer implements Serializer {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
+
             Map<ContactType, String> contacts = resume.getContacts();
             dos.writeInt(contacts.size());
 
@@ -29,13 +30,13 @@ public class DataStreamSerializer implements Serializer {
                 SectionType sectionType = entry.getKey();
                 Section section = entry.getValue();
 
-                switch (entry.getKey().name()) {
-                    case ("PERSONAL"):
-                    case ("OBJECTIVE"):
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
                         dos.writeUTF(((TextSection) section).getContent());
                         break;
-                    case ("ACHIEVEMENT"):
-                    case ("QUALIFICATIONS"):
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
                         List<String> list = new ArrayList<>(((ListSection) section).getItems());
                         dos.writeInt(list.size());
                         list.forEach(s -> {
@@ -46,11 +47,10 @@ public class DataStreamSerializer implements Serializer {
                             }
                         });
                         break;
-                    case ("EXPERIENCE"):
-                    case ("EDUCATION"):
+                    case EXPERIENCE:
+                    case EDUCATION:
                         List<Organization> organizationList = new ArrayList<>(((OrganizationSection) section).getOrganizations());
                         dos.writeInt(organizationList.size());
-
                         organizationList.forEach(o -> {
                             try {
                                 dos.writeUTF((o.getHomePage()).getName());
@@ -60,20 +60,20 @@ public class DataStreamSerializer implements Serializer {
                             }
                         });
 
-                        for (int i = 0; i < organizationList.size(); i++){
+                        for (int i = 0; i < organizationList.size(); i++) {
                             Organization.Position p = organizationList.get(i).getPositions().get(i);
                             dos.writeUTF(p.getDescription());
                             dos.writeUTF(p.getTitle());
-                            localDate(dos, p.getStartDate());
-                            localDate(dos, p.getEndDate());
+                            writeLocalDate(dos, p.getStartDate());
+                            writeLocalDate(dos, p.getEndDate());
                         }
-                    break;
+                        break;
                 }
             }
         }
     }
 
-    private void localDate(DataOutputStream dos, LocalDate ld) throws IOException {
+    private void writeLocalDate(DataOutputStream dos, LocalDate ld) throws IOException {
         dos.writeInt(ld.getDayOfMonth());
         dos.writeInt(ld.getDayOfYear());
     }
@@ -91,16 +91,22 @@ public class DataStreamSerializer implements Serializer {
 
             int sectionsSize = dis.readInt();
             for (int i = 0; i < sectionsSize; i++) {
-                switch (dis.readUTF()) {
-                    case ("PERSONAL"):
-                    case ("OBJECTIVE"):
-
-
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        resume.addSections(sectionType, new TextSection(dis.readUTF()));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        int listSize = dis.readInt();
+                        for (int j = 0; j < listSize; j++) {
+                            resume.addSections(sectionType, new ListSection(dis.readUTF()));
+                            break;
+                        }
                 }
             }
             return null;
         }
-
     }
-
 }
