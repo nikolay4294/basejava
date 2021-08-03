@@ -39,27 +39,18 @@ public class DataStreamSerializer implements Serializer {
                     case QUALIFICATIONS:
                         List<String> list = new ArrayList<>(((ListSection) section).getItems());
                         dos.writeInt(list.size());
-                        list.forEach(s -> {
-                            try {
-                                dos.writeUTF(s);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
+                        for (String s : list) {
+                            dos.writeUTF(s);
+                        }
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Organization> organizationList = new ArrayList<>(((OrganizationSection) section).getOrganizations());
                         dos.writeInt(organizationList.size());
-                        organizationList.forEach(o -> {
-                            try {
-                                dos.writeUTF((o.getHomePage()).getName());
-                                dos.writeUTF((o.getHomePage()).getUrl());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
-
+                        for (Organization o : organizationList) {
+                            Link link = o.getHomePage();
+                            writeLink(dos, link);
+                        }
                         for (int i = 0; i < organizationList.size(); i++) {
                             Organization.Position p = organizationList.get(i).getPositions().get(i);
                             dos.writeUTF(p.getDescription());
@@ -75,7 +66,13 @@ public class DataStreamSerializer implements Serializer {
 
     private void writeLocalDate(DataOutputStream dos, LocalDate ld) throws IOException {
         dos.writeInt(ld.getDayOfMonth());
-        dos.writeInt(ld.getDayOfYear());
+        dos.writeInt(ld.getDayOfMonth());
+        dos.writeInt(ld.getYear());
+    }
+
+    private void writeLink(DataOutputStream dos, Link link) throws IOException {
+        dos.writeUTF(link.getName());
+        dos.writeUTF(link.getUrl());
     }
 
     @Override
@@ -99,11 +96,12 @@ public class DataStreamSerializer implements Serializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        int listSize = dis.readInt();
-                        for (int j = 0; j < listSize; j++) {
-                            resume.addSections(sectionType, new ListSection(dis.readUTF()));
-                            break;
+                        List<String> listSections = new ArrayList<>();
+                        for (int j = 0; j < dis.readInt(); j++) {
+                            listSections.add(dis.readUTF());
                         }
+                        resume.addSections(sectionType, new ListSection(listSections));
+                        break;
                 }
             }
             return null;
