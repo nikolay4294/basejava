@@ -53,7 +53,7 @@ public class DataStreamSerializer implements Serializer {
                         }
                         for (int i = 0; i < organizationList.size(); i++) {
                             Organization.Position p = organizationList.get(i).getPositions().get(i);
-                            dos.writeUTF(p.getDescription());
+                            dos.writeUTF(p.getDescription() == null ? " " : p.getDescription());
                             dos.writeUTF(p.getTitle());
                             writeLocalDate(dos, p.getStartDate());
                             writeLocalDate(dos, p.getEndDate());
@@ -72,7 +72,7 @@ public class DataStreamSerializer implements Serializer {
 
     private void writeLink(DataOutputStream dos, Link link) throws IOException {
         dos.writeUTF(link.getName());
-        dos.writeUTF(link.getUrl());
+        dos.writeUTF(link.getUrl() == null ? " " : link.getUrl());
     }
 
     @Override
@@ -96,15 +96,26 @@ public class DataStreamSerializer implements Serializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        List<String> listSections = new ArrayList<>();
-                        for (int j = 0; j < dis.readInt(); j++) {
-                            listSections.add(dis.readUTF());
-                        }
-                        resume.addSections(sectionType, new ListSection(listSections));
+                        resume.addSections(sectionType, new ListSection(doGetListSections(dis)));
                         break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+
                 }
             }
             return null;
         }
+    }
+
+    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+    }
+
+    private List<String> doGetListSections(DataInputStream dis) throws IOException {
+        List<String> listSections = new ArrayList<>(dis.readInt());
+        for (int j = 0; j < dis.readInt(); j++) {
+            listSections.add(dis.readUTF());
+        }
+        return listSections;
     }
 }
