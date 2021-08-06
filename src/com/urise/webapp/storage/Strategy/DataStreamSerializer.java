@@ -51,8 +51,8 @@ public class DataStreamSerializer implements Serializer {
                             Link link = o.getHomePage();
                             writeLink(dos, link);
                         }
-                        for (int i = 0; i < organizationList.size(); i++) {
-                            Organization.Position p = organizationList.get(i).getPositions().get(i);
+                        for (Organization o : organizationList) {
+                            Organization.Position p = organizationList.get(0).getPositions().get(0);
                             dos.writeUTF(p.getDescription() == null ? " " : p.getDescription());
                             dos.writeUTF(p.getTitle());
                             writeLocalDate(dos, p.getStartDate());
@@ -100,7 +100,9 @@ public class DataStreamSerializer implements Serializer {
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-
+                        for (int j = 0; j < dis.readInt(); j++) {
+                            resume.addSections(sectionType, new OrganizationSection(new Organization(getLinks(dis), getPositions(dis))));
+                        }
                 }
             }
             return null;
@@ -117,5 +119,17 @@ public class DataStreamSerializer implements Serializer {
             listSections.add(dis.readUTF());
         }
         return listSections;
+    }
+
+    private Link getLinks(DataInputStream dis) throws IOException {
+        return new Link(dis.readUTF(), dis.readUTF() == " " ? null : dis.readUTF());
+    }
+
+    private List<Organization.Position> getPositions(DataInputStream dis) throws IOException {
+        List<Organization.Position> positions = new ArrayList<>(dis.readInt());
+        positions.add(new Organization.Position(
+                readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF() == " " ? null : dis.readUTF())
+        );
+        return positions;
     }
 }
