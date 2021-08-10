@@ -54,12 +54,12 @@ public class DataStreamSerializer implements Serializer {
                             Link link = o.getHomePage();
                             writeLink(dos, link);
                         }
-                        for (Organization o : organizationList) {
-                            Organization.Position p = organizationList.get(0).getPositions().get(0);
+                        for (int j = 0; j < organizationList.size() - 1; j++) {
+                            Organization.Position p = organizationList.get(j).getPositions().get(j);
                             writeLocalDate(dos, p.getStartDate());
                             writeLocalDate(dos, p.getEndDate());
-                            dos.writeUTF(p.getDescription() == null ? " " : p.getDescription());
                             dos.writeUTF(p.getTitle());
+                            dos.writeUTF(p.getDescription() == null ? " " : p.getDescription());
                         }
                         break;
                 }
@@ -92,26 +92,9 @@ public class DataStreamSerializer implements Serializer {
             int sectionsSize = dis.readInt();
             for (int i = 0; i < sectionsSize; i++) {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                switch (sectionType) {
-                    case PERSONAL:
-                    case OBJECTIVE:
-                        resume.addSections(sectionType, new TextSection(dis.readUTF()));
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        int sizeListSections = dis.readInt();
-                        resume.addSections(sectionType, new ListSection(doGetListSections(dis, sizeListSections)));
-                        break;
-                    case EXPERIENCE:
-                    case EDUCATION:
-                        int sizeOrganizationList = dis.readInt();
-                        for (int j = 0; j < sizeOrganizationList; j++) {
-                            resume.addSections(sectionType, new OrganizationSection(new Organization(getLink(dis), getPositions(dis, sizeOrganizationList))));
-                        }
-                        break;
-                }
+                resume.addSections(sectionType, readSection(dis, sectionType));
             }
-            return null;
+            return resume;
         }
     }
 
@@ -135,8 +118,28 @@ public class DataStreamSerializer implements Serializer {
         List<Organization.Position> listPositions = new ArrayList<>(sizeOrganizationList);
         for (int i = 0; i < sizeOrganizationList; i++){
             listPositions.add(new Organization.Position(
-                    readLocalDate(dis),readLocalDate(dis), dis.readUTF(), dis.readUTF()));
+                readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()));
         }
          return listPositions;
+    }
+
+    private Section readSection(DataInputStream dis, SectionType sectionType) throws IOException {
+        Section section = null;
+        switch (sectionType) {
+            case PERSONAL:
+            case OBJECTIVE:
+                section = new TextSection(dis.readUTF());
+            break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                int sizeListSections = dis.readInt();
+                section = new ListSection(doGetListSections(dis, sizeListSections));
+            break;
+            case EXPERIENCE:
+            case EDUCATION:
+                int sizeOrganizationList = dis.readInt();
+                section = new OrganizationSection(new Organization(getLink(dis), getPositions(dis, sizeOrganizationList)));
+        }
+        return section;
     }
 }
