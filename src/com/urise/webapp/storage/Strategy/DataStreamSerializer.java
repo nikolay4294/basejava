@@ -141,8 +141,7 @@ public class DataStreamSerializer implements Serializer {
 
     private Link readLink(DataInputStream dis) throws IOException {
         String organizationName = dis.readUTF();
-        String url = dis.readUTF();
-        return new Link(organizationName, url.equals("") ? null : url);
+        return new Link(organizationName, readDescriptionAndUrl(dis));
 
     }
 
@@ -150,14 +149,14 @@ public class DataStreamSerializer implements Serializer {
         List<Organization.Position> list = new ArrayList<>();
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
-            list.add(i, new Organization.Position(readLocalDate(dis), readLocalDate(dis), dis.readUTF(), readDescription(dis)));
+            list.add(i, new Organization.Position(readLocalDate(dis), readLocalDate(dis), dis.readUTF(), readDescriptionAndUrl(dis)));
 
         }
         return list;
     }
 
-    private String readDescription(DataInputStream dis) throws IOException {
-        String description = dis.readUTF();
-        return description.equals("") ? null : description;
+    private String readDescriptionAndUrl(DataInputStream dis) throws IOException {
+        String value = dis.readUTF();
+        return value.equals("") ? null : value;
     }
 }
