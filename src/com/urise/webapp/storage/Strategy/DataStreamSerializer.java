@@ -1,12 +1,12 @@
 package com.urise.webapp.storage.Strategy;
 
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class DataStreamSerializer implements Serializer {
     @Override
@@ -38,37 +38,38 @@ public class DataStreamSerializer implements Serializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        List<String> list = new ArrayList<>(((ListSection) section).getItems());
-                        dos.writeInt(list.size());
-                        for (String s : list) {
-                            dos.writeUTF(s);
-                        }
+                        writeWithException(((ListSection) section).getItems(), dos, str -> {
+                            try {
+                                dos.writeUTF(str);
+                            } catch (IOException e) {
+                                throw new StorageException("ListSection write error", null);
+                            }
+                        });
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        List<Organization> organizationList = new ArrayList<>(((OrganizationSection) section).getOrganizations());
-                        dos.writeInt(organizationList.size());
-                        for (Organization o : organizationList) {
-                            Link link = o.getHomePage();
-                            writeLink(dos, link);
-                            writePositions(dos, o);
-                        }
+                        writeWithException(((OrganizationSection) section).getOrganizations(), dos, organization -> {
+                            try {
+                                Link link = organization.getHomePage();
+                                writeLink(dos, link);
+                                writeWithException(organization.getPositions(), dos, position -> {
+                                    try {
+                                        writeLocalDate(dos, position.getStartDate());
+                                        writeLocalDate(dos, position.getEndDate());
+                                        dos.writeUTF(position.getTitle());
+                                        String description = position.getDescription();
+                                        dos.writeUTF(description == null ? ("") : description);
+                                    } catch (IOException e) {
+                                        throw new StorageException("Position write error", null);
+                                    }
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
                         break;
                 }
             }
-        }
-    }
-
-    private void writePositions(DataOutputStream dos, Organization organization) throws IOException {
-        List<Organization.Position> positionList = organization.getPositions();
-        dos.writeInt(positionList.size());
-
-        for (Organization.Position position : positionList) {
-            writeLocalDate(dos, position.getStartDate());
-            writeLocalDate(dos, position.getEndDate());
-            dos.writeUTF(position.getTitle());
-            String description = position.getDescription();
-            dos.writeUTF(description == null ? ("") : description);
         }
     }
 
@@ -81,6 +82,14 @@ public class DataStreamSerializer implements Serializer {
         dos.writeUTF(link.getName());
         String url = link.getUrl();
         dos.writeUTF(url == null ? ("") : url);
+    }
+
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, Consumer<T> consumer) throws IOException {
+        Objects.requireNonNull(consumer);
+        dos.writeInt(collection.size());
+        for (T element : collection) {
+            consumer.accept(element);
+        }
     }
 
     @Override
@@ -121,7 +130,6 @@ public class DataStreamSerializer implements Serializer {
                     organizationList.add(new Organization(readLink(dis), readPositions(dis)));
                 }
                 return new OrganizationSection(organizationList);
-
             default:
                 throw new IllegalStateException();
         }
@@ -142,7 +150,6 @@ public class DataStreamSerializer implements Serializer {
     private Link readLink(DataInputStream dis) throws IOException {
         String organizationName = dis.readUTF();
         return new Link(organizationName, readDescriptionAndUrl(dis));
-
     }
 
     private List<Organization.Position> readPositions(DataInputStream dis) throws IOException {
@@ -150,7 +157,6 @@ public class DataStreamSerializer implements Serializer {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
             list.add(i, new Organization.Position(readLocalDate(dis), readLocalDate(dis), dis.readUTF(), readDescriptionAndUrl(dis)));
-
         }
         return list;
     }
