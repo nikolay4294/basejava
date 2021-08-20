@@ -1,12 +1,10 @@
 package com.urise.webapp.storage.Strategy;
 
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class DataStreamSerializer implements Serializer {
     @Override
@@ -38,34 +36,20 @@ public class DataStreamSerializer implements Serializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeWithException(((ListSection) section).getItems(), dos, str -> {
-                            try {
-                                dos.writeUTF(str);
-                            } catch (IOException e) {
-                                throw new StorageException("ListSection write error", null);
-                            }
-                        });
+                        writeWithException(((ListSection) section).getItems(), dos, dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
                         writeWithException(((OrganizationSection) section).getOrganizations(), dos, organization -> {
-                            try {
-                                Link link = organization.getHomePage();
-                                writeLink(dos, link);
-                                writeWithException(organization.getPositions(), dos, position -> {
-                                    try {
-                                        writeLocalDate(dos, position.getStartDate());
-                                        writeLocalDate(dos, position.getEndDate());
-                                        dos.writeUTF(position.getTitle());
-                                        String description = position.getDescription();
-                                        dos.writeUTF(description == null ? ("") : description);
-                                    } catch (IOException e) {
-                                        throw new StorageException("Position write error", null);
-                                    }
-                                });
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            Link link = organization.getHomePage();
+                            writeLink(dos, link);
+                            writeWithException(organization.getPositions(), dos, position -> {
+                                writeLocalDate(dos, position.getStartDate());
+                                writeLocalDate(dos, position.getEndDate());
+                                dos.writeUTF(position.getTitle());
+                                String description = position.getDescription();
+                                dos.writeUTF(description == null ? ("") : description);
+                            });
                         });
                         break;
                 }
@@ -84,12 +68,17 @@ public class DataStreamSerializer implements Serializer {
         dos.writeUTF(url == null ? ("") : url);
     }
 
-    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, Consumer<T> consumer) throws IOException {
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, Collections<T> consumer) throws IOException {
         Objects.requireNonNull(consumer);
         dos.writeInt(collection.size());
         for (T element : collection) {
-            consumer.accept(element);
+            consumer.write(element);
         }
+    }
+
+    @FunctionalInterface
+    private interface Collections<T> {
+        void write(T t) throws IOException;
     }
 
     @Override
