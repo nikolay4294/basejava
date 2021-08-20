@@ -79,16 +79,11 @@ public class DataStreamSerializer implements Serializer {
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
 
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-
-            int sectionsSize = dis.readInt();
-            for (int i = 0; i < sectionsSize; i++) {
+            readItem(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readItem(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 resume.addSections(sectionType, readSection(dis, sectionType));
-            }
+            });
             return resume;
         }
     }
@@ -108,6 +103,13 @@ public class DataStreamSerializer implements Serializer {
                 )))));
         }
         throw new IllegalStateException();
+    }
+
+    private void readItem(DataInputStream dis, Item item) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            item.readItem();
+        }
     }
 
     private LocalDate readLocalDate(DataInputStream dis) throws IOException {
@@ -142,5 +144,10 @@ public class DataStreamSerializer implements Serializer {
     @FunctionalInterface
     private interface ItemReader<T> {
         T read() throws IOException;
+    }
+
+    @FunctionalInterface
+    private interface Item {
+        void readItem() throws IOException;
     }
 }
