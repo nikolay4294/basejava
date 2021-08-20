@@ -14,17 +14,13 @@ public class DataStreamSerializer implements Serializer {
             dos.writeUTF(resume.getFullName());
 
             Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
-
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            writeWithException(contacts.entrySet(), dos, entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
 
             Map<SectionType, Section> sections = resume.getSections();
-            dos.writeInt(sections.size());
-
-            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+            writeWithException(sections.entrySet(), dos, entry -> {
                 SectionType sectionType = entry.getKey();
                 Section section = entry.getValue();
                 dos.writeUTF(sectionType.name());
@@ -53,7 +49,7 @@ public class DataStreamSerializer implements Serializer {
                         });
                         break;
                 }
-            }
+            });
         }
     }
 
@@ -68,17 +64,12 @@ public class DataStreamSerializer implements Serializer {
         dos.writeUTF(url == null ? ("") : url);
     }
 
-    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, Collections<T> consumer) throws IOException {
-        Objects.requireNonNull(consumer);
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, ItemWriter<T> writer) throws IOException {
+        Objects.requireNonNull(writer);
         dos.writeInt(collection.size());
         for (T element : collection) {
-            consumer.write(element);
+            writer.write(element);
         }
-    }
-
-    @FunctionalInterface
-    private interface Collections<T> {
-        void write(T t) throws IOException;
     }
 
     @Override
@@ -109,31 +100,18 @@ public class DataStreamSerializer implements Serializer {
                 return new TextSection(dis.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                int sizeListSections = dis.readInt();
-                return new ListSection(getListSections(dis, sizeListSections));
+                return new ListSection(readWithException(dis, dis::readUTF));
             case EXPERIENCE:
             case EDUCATION:
-                int size = dis.readInt();
-                List<Organization> organizationList = new ArrayList<>(size);
-                for (int i = 0; i < size; i++) {
-                    organizationList.add(new Organization(readLink(dis), readPositions(dis)));
-                }
-                return new OrganizationSection(organizationList);
-            default:
-                throw new IllegalStateException();
+                return new OrganizationSection(readWithException(dis, () -> new Organization(readLink(dis), readWithException(dis, () -> new Organization.Position(
+                        readLocalDate(dis), readLocalDate(dis), dis.readUTF(), readDescriptionAndUrl(dis)
+                )))));
         }
+        throw new IllegalStateException();
     }
 
     private LocalDate readLocalDate(DataInputStream dis) throws IOException {
         return LocalDate.of(dis.readInt(), dis.readInt(), 1);
-    }
-
-    private List<String> getListSections(DataInputStream dis, int sizeList) throws IOException {
-        List<String> listSections = new ArrayList<>(sizeList);
-        for (int i = 0; i < sizeList; i++) {
-            listSections.add(dis.readUTF());
-        }
-        return listSections;
     }
 
     private Link readLink(DataInputStream dis) throws IOException {
@@ -141,17 +119,28 @@ public class DataStreamSerializer implements Serializer {
         return new Link(organizationName, readDescriptionAndUrl(dis));
     }
 
-    private List<Organization.Position> readPositions(DataInputStream dis) throws IOException {
-        List<Organization.Position> list = new ArrayList<>();
+    private String readDescriptionAndUrl(DataInputStream dis) throws IOException {
+        String value = dis.readUTF();
+        return value.equals("") ? null : value;
+    }
+
+    private <T> List<T> readWithException(DataInputStream dis, ItemReader<T> reader) throws IOException {
+        Objects.requireNonNull(reader);
         int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            list.add(i, new Organization.Position(readLocalDate(dis), readLocalDate(dis), dis.readUTF(), readDescriptionAndUrl(dis)));
+            list.add(reader.read());
         }
         return list;
     }
 
-    private String readDescriptionAndUrl(DataInputStream dis) throws IOException {
-        String value = dis.readUTF();
-        return value.equals("") ? null : value;
+    @FunctionalInterface
+    private interface ItemWriter<T> {
+        void write(T t) throws IOException;
+    }
+
+    @FunctionalInterface
+    private interface ItemReader<T> {
+        T read() throws IOException;
     }
 }
