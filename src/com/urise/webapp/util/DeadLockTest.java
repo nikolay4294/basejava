@@ -17,11 +17,6 @@ public class DeadLockTest {
         public void run() {
             synchronized (Lock1) {
                 System.out.println("Lock1 is holding");
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
             synchronized (Lock2) {
                 System.out.println("Lock2 is holding");
