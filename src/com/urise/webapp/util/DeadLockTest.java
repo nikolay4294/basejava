@@ -5,33 +5,37 @@ public class DeadLockTest {
     public static final Object Lock2 = new Object();
 
     public static void main(String[] args) throws InterruptedException {
-        DeadLockTestDemo1 d1 = new DeadLockTestDemo1();
-        DeadLockTestDemo2 d2 = new DeadLockTestDemo2();
-
-        d1.start();
-        d2.start();
+        executeDeadLock(Lock1, Lock2);
     }
 
-    private static class DeadLockTestDemo1 extends Thread {
-
-        public void run() {
+    private static void executeDeadLock(Object Lock1, Object Lock2) {
+        Thread thread1 = new Thread(() -> {
             synchronized (Lock1) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 System.out.println("Lock1 is holding");
             }
             synchronized (Lock2) {
                 System.out.println("Lock2 is holding");
             }
-        }
-    }
-
-    private static class DeadLockTestDemo2 extends Thread {
-        public void run() {
+        });
+        Thread thread2 = new Thread(() -> {
             synchronized (Lock2) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 System.out.println("Lock2 is holding");
             }
             synchronized (Lock1) {
                 System.out.println("Lock1 is holding");
             }
-        }
+        });
+        thread1.start();
+        thread2.start();
     }
 }
