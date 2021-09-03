@@ -1,6 +1,7 @@
 package com.urise.webapp.util;
 
 class DeadLockTest {
+
     private static final Object Lock1 = new Object();
     private static final Object Lock2 = new Object();
 
@@ -11,17 +12,17 @@ class DeadLockTest {
 
     private static void executeDeadLock(Object Lock1, Object Lock2) {
         new Thread(() -> {
-            System.out.println("поток " + Thread.currentThread().getName() + " ожидает захвата объекта Lock1");
+            System.out.println("поток " + Thread.currentThread().getName() + " ожидает захвата объекта " + Lock1.toString());
             synchronized (Lock1) {
-                System.out.println("поток " + Thread.currentThread().getName() + " захватил объект Lock1");
+                System.out.println("поток " + Thread.currentThread().getName() + " захватил объект " + Lock1.toString());
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("поток " + Thread.currentThread().getName() + " ожидает захвата объекта Lock2");
+                System.out.println("поток " + Thread.currentThread().getName() + " ожидает захвата объекта " + Lock2.toString());
                 synchronized (Lock2) {
-                    System.out.println("поток " + Thread.currentThread().getName() + " захватил объект Lock2");
+                    System.out.println("поток " + Thread.currentThread().getName() + " захватил объект " + Lock2.toString());
                 }
             }
         }).start();
