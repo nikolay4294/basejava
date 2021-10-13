@@ -4,7 +4,7 @@ import com.urise.webapp.Config;
 import com.urise.webapp.ResumeTestData;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.model.*;
+import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +15,7 @@ import java.util.List;
 
 public abstract class AbstractStorageTest {
     protected final static File STORAGE_DIR = Config.get().getStorageDir();
+
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -28,13 +29,13 @@ public abstract class AbstractStorageTest {
     private static final Resume R4;
 
     static {
-        R1 = new Resume(UUID_1, "Name1");
+        R1 = new Resume(UUID_1, "name1");
         //R1 = ResumeTestData.createResume(UUID_1, "Name1");
-        R2 = new Resume(UUID_2, "Name2");
+        R2 = new Resume(UUID_2, "name2");
         //R2 = ResumeTestData.createResume(UUID_2, "Name2");
-        R3 = new Resume(UUID_3, "Name3");
+        R3 = new Resume(UUID_3, "name3");
         //R3 = ResumeTestData.createResume(UUID_3, "Name3");
-        R4 = new Resume(UUID_4, "Name4");
+        R4 = new Resume(UUID_4, "name4");
         //R4 = ResumeTestData.createResume(UUID_4, "Name4");
     }
 
