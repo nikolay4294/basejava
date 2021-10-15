@@ -27,6 +27,13 @@ public class SqlStorage implements Storage {
         PreparedStatement ps = sqlHelper.getConnection("UPDATE resume SET full_name = ? WHERE uuid = ?");
         sqlHelper.setString(ps, 1, r.getFullName());
         sqlHelper.setString(ps, 2, r.getUuid());
+        try {
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException(r.getUuid());
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
