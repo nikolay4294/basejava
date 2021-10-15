@@ -14,8 +14,7 @@ public class SqlHelper {
     public PreparedStatement getConnection(String sql) {
         try {
             Connection conn = connectionFactory.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            return ps;
+            return conn.prepareStatement(sql);
         } catch (SQLException e) {
             throw new StorageException(e);
         }
