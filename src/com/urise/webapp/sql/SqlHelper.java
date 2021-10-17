@@ -2,7 +2,9 @@ package com.urise.webapp.sql;
 
 import com.urise.webapp.exception.StorageException;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class SqlHelper {
     ConnectionFactory connectionFactory;
@@ -11,7 +13,7 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public PreparedStatement getConnection(String sql) {
+    public PreparedStatement getConnectionТ(String sql) {
         try {
             Connection conn = connectionFactory.getConnection();
             return conn.prepareStatement(sql);
@@ -31,14 +33,6 @@ public class SqlHelper {
     public void execute(PreparedStatement ps) {
         try {
             ps.execute();
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
-    }
-
-    public ResultSet executeQuery(PreparedStatement ps) {
-        try {
-            return ps.executeQuery();
         } catch (SQLException e) {
             throw new StorageException(e);
         }

@@ -1,13 +1,13 @@
 CREATE TABLE resume
 (
-    uuid      CHAR(4) PRIMARY KEY NOT NULL,
-    full_name TEXT                 NOT NULL
+    uuid      CHAR(36) PRIMARY KEY NOT NULL,
+    full_name TEXT                NOT NULL
 );
 
 CREATE TABLE contact
 (
     id          SERIAL,
-    resume_uuid CHAR(4) NOT NULL REFERENCES resume (uuid) ON DELETE CASCADE,
+    resume_uuid CHAR(36) NOT NULL REFERENCES resume (uuid) ON DELETE CASCADE,
     type        TEXT     NOT NULL,
     value       TEXT     NOT NULL
 );
