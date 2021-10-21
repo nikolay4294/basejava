@@ -38,14 +38,10 @@ public class SqlStorage extends Throwable implements Storage {
     @Override
     public void save(Resume r) {
         sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", (ps) -> {
-            try {
-                ps.setString(1, r.getUuid());
-                ps.setString(2, r.getFullName());
-                ps.execute();
-                return null;
-            } catch (ExistStorageException e) {
-                throw new ExistStorageException("Error - resume is exist");
-            }
+            ps.setString(1, r.getUuid());
+            ps.setString(2, r.getFullName());
+            ps.execute();
+            return null;
         });
     }
 
