@@ -1,11 +1,11 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class SqlStorage extends Throwable implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.execute("DELETE FROM resume", (ps) -> ps.execute());
+        sqlHelper.execute("DELETE FROM resume", PreparedStatement::execute);
     }
 
     @Override
