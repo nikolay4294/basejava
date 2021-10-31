@@ -21,7 +21,7 @@ public class ResumeTestData {
         resume.addContact(ContactType.LINKED, " https://www.linkedin.com/in/gkislin\n");
         resume.addContact(ContactType.SKYPE, " grigory.kislin\n");
         resume.addContact(ContactType.STACK, " https://stackoverflow.com/users/548473/grigory-kislin\n");
-
+/*
         resume.addSections(SectionType.OBJECTIVE, new TextSection("Objective1"));
         resume.addSections(SectionType.PERSONAL, new TextSection("Personal data"));
         resume.addSections(SectionType.ACHIEVEMENT, new ListSection("Achievement11", "Achievement12", "Achievement13"));
@@ -43,6 +43,8 @@ public class ResumeTestData {
                 new OrganizationSection(
                         new Organization("Organization2", "http://organization2.ru",
                                 new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));
+
+ */
         return resume;
     }
 }

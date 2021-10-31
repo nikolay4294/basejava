@@ -8,6 +8,7 @@ import com.urise.webapp.sql.SqlHelper;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +28,28 @@ public class SqlStorage extends Throwable implements Storage {
 
     @Override
     public void update(Resume r) {
-        sqlHelper.execute("UPDATE resume SET full_name = ? WHERE uuid = ?", (ps) -> {
-            ps.setString(1, r.getFullName());
-            ps.setString(2, r.getUuid());
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(r.getUuid());
-            }
-            return null;
-        });
+        sqlHelper.transactionalExecute(conn -> {
+                    try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+                        ps.setString(1, r.getFullName());
+                        ps.setString(2, r.getUuid());
+                        ps.execute();
+                    }
+                    try (PreparedStatement ps = conn.prepareStatement("UPDATE contact SET type = ?, value = ? WHERE resume_uuid = ?")) {
+                        saveContacts(r, ps);
+                    }
+                    return null;
+                }
+        );
+    }
+
+    private void saveContacts(Resume r, PreparedStatement ps) throws SQLException {
+        for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
+            ps.setString(1, r.getUuid());
+            ps.setString(2, e.getKey().name());
+            ps.setString(3, e.getValue());
+            ps.addBatch();
+        }
+        ps.executeBatch();
     }
 
     @Override
@@ -46,13 +61,7 @@ public class SqlStorage extends Throwable implements Storage {
                         ps.execute();
                     }
                     try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
-                        for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
-                            ps.setString(1, r.getUuid());
-                            ps.setString(2, e.getKey().name());
-                            ps.setString(3, e.getValue());
-                            ps.addBatch();
-                        }
-                        ps.executeBatch();
+                        saveContacts(r, ps);
                     }
                     return null;
                 }
