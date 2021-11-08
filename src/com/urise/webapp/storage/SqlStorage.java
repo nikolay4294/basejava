@@ -30,9 +30,6 @@ public class SqlStorage extends Throwable implements Storage {
                     try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
                         ps.setString(1, r.getFullName());
                         ps.setString(2, r.getUuid());
-                        if (ps.executeUpdate() != 1) {
-                            throw new NotExistStorageException(r.getUuid());
-                        }
                     }
                     deleteContactsFromDB(r, conn);
                     saveContactsToDB(r, conn);
@@ -141,7 +138,9 @@ public class SqlStorage extends Throwable implements Storage {
 
     private void addContactsToResume(Resume r, ResultSet rs) throws SQLException {
         String value = rs.getString("value");
-        ContactType type = ContactType.valueOf(rs.getString("type"));
-        r.addContact(type, value);
+        String type = rs.getString("type");
+        if (type != null) {
+            r.addContact(ContactType.valueOf(type), value);
+        }
     }
 }

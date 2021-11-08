@@ -30,13 +30,13 @@ public abstract class AbstractStorageTest {
     private static final Resume R4;
 
     static {
-        //R1 = new Resume(UUID_1, "name1");
-        R1 = ResumeTestData.createResume(UUID_1, "Name1");
-        //R2 = new Resume(UUID_2, "name2");
+        R1 = new Resume(UUID_1, "Name1");
+        //R1 = ResumeTestData.createResume(UUID_1, "Name1");
+        //R2 = new Resume(UUID_2, "Name2");
         R2 = ResumeTestData.createResume(UUID_2, "Name2");
-        //R3 = new Resume(UUID_3, "name3");
+        //R3 = new Resume(UUID_3, "Name3");
         R3 = ResumeTestData.createResume(UUID_3, "Name3");
-        //R4 = new Resume(UUID_4, "name4");
+        //R4 = new Resume(UUID_4, "Name4");
         R4 = ResumeTestData.createResume(UUID_4, "Name4");
     }
 
@@ -60,8 +60,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume resume = ResumeTestData.createResume(R2.getUuid(), UUID_2);
-        //Resume resume = new Resume(UUID_2, "name2");
+        //Resume resume = ResumeTestData.createResume(R2.getUuid(), UUID_2);
+        Resume resume = new Resume(UUID_2, "Name2");
         storage.update(resume);
         Assert.assertEquals(resume, storage.get(UUID_2));
     }
