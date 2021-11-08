@@ -6,7 +6,10 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SqlStorage extends Throwable implements Storage {
 
@@ -31,8 +34,8 @@ public class SqlStorage extends Throwable implements Storage {
                             throw new NotExistStorageException(r.getUuid());
                         }
                     }
-                    deleteContactsFromBD(r, conn);
-                    saveContactsToBD(r, conn);
+                    deleteContactsFromDB(r, conn);
+                    saveContactsToDB(r, conn);
                     return null;
                 }
         );
@@ -46,7 +49,7 @@ public class SqlStorage extends Throwable implements Storage {
                         ps.setString(2, r.getFullName());
                         ps.execute();
                     }
-                    saveContactsToBD(r, conn);
+                    saveContactsToDB(r, conn);
                     return null;
                 }
         );
@@ -67,9 +70,7 @@ public class SqlStorage extends Throwable implements Storage {
                     }
                     Resume r = new Resume(uuid, rs.getString("full_name"));
                     do {
-                        String value = rs.getString("value");
-                        ContactType type = ContactType.valueOf(rs.getString("type"));
-                        r.addContact(type, value);
+                        addContactsToResume(r, rs);
                     } while (rs.next());
                     return r;
                 });
@@ -102,7 +103,6 @@ public class SqlStorage extends Throwable implements Storage {
                             r = new Resume(uuid, rs.getString("full_name"));
                             resumeMap.put(uuid, r);
                         }
-                        resumeMap.put(uuid, r);
                         addContactsToResume(r, rs);
                     }
                     return new ArrayList<>(resumeMap.values());
@@ -117,9 +117,9 @@ public class SqlStorage extends Throwable implements Storage {
         });
     }
 
-    private void deleteContactsFromBD(Resume r, Connection conn) throws SQLException {
-        String uuid = r.getUuid();
+    private void deleteContactsFromDB(Resume r, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
+            String uuid = r.getUuid();
             ps.setString(1, uuid);
             if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException(uuid);
@@ -127,7 +127,7 @@ public class SqlStorage extends Throwable implements Storage {
         }
     }
 
-    private void saveContactsToBD(Resume r, Connection conn) throws SQLException {
+    private void saveContactsToDB(Resume r, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
                 ps.setString(1, r.getUuid());
@@ -143,6 +143,5 @@ public class SqlStorage extends Throwable implements Storage {
         String value = rs.getString("value");
         ContactType type = ContactType.valueOf(rs.getString("type"));
         r.addContact(type, value);
-
     }
 }
