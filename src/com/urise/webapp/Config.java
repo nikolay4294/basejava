@@ -7,7 +7,8 @@ import java.io.*;
 import java.util.Properties;
 
 public class Config {
-    protected final static File PROPS = new File("./config/resumes.properties");
+    //protected final static File PROPS = new File("./config/resumes.properties");
+    protected final static File PROPS = new File("config\\resumes.properties");
     private static final Config INSTANCE = new Config();
 
     private final File storageDir;
