@@ -34,6 +34,7 @@ public class SqlStorage extends Throwable implements Storage {
                         ps.setString(2, r.getUuid());
                     }
                     deleteContactsFromDB(r, conn);
+                    deleteSectionsFromDB(r,conn);
                     saveContactsToDB(r, conn);
                     saveSectionsToDB(r, conn);
                     return null;
@@ -142,6 +143,16 @@ public class SqlStorage extends Throwable implements Storage {
 
     private void deleteContactsFromDB(Resume r, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
+            String uuid = r.getUuid();
+            ps.setString(1, uuid);
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException(uuid);
+            }
+        }
+    }
+
+    private void deleteSectionsFromDB(Resume r, Connection conn) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM section WHERE resume_uuid = ?")) {
             String uuid = r.getUuid();
             ps.setString(1, uuid);
             if (ps.executeUpdate() == 0) {
