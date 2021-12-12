@@ -12,11 +12,15 @@ public class JsonParser {
             .registerTypeAdapter(Section.class, new JsonSectionAdapter())
             .create();
 
-    public static <T> T read(Reader reader, Class<T> clazz){
+    public static <T> T read(Reader reader, Class<T> clazz) {
         return GSON.fromJson(reader, clazz);
     }
 
-    public static <T> void write(T object, Writer writer){
+    public static <T> void write(T object, Writer writer) {
         GSON.toJson(object, writer);
+    }
+
+    public static Section read(String value, Class<Section> sectionClass) {
+        return GSON.fromJson(value, sectionClass);
     }
 }

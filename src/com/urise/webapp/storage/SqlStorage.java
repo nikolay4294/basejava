@@ -6,6 +6,7 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.model.Section;
 import com.urise.webapp.model.SectionType;
 import com.urise.webapp.sql.SqlHelper;
+import com.urise.webapp.util.JsonParser;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -191,9 +192,9 @@ public class SqlStorage extends Throwable implements Storage {
 
     private void addSectionsToResume(Resume r, ResultSet rs) throws SQLException {
         String value = rs.getString("value");
-        String type = rs.getString("type");
-        if (type != null) {
-            r.addContact(ContactType.valueOf(type), value);
+        if (value != null) {
+            SectionType type = SectionType.valueOf(rs.getString("type"));
+            r.addSections(type, JsonParser.read(value, Section.class));
         }
     }
 }
