@@ -145,9 +145,7 @@ public class SqlStorage extends Throwable implements Storage {
         try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
             String uuid = r.getUuid();
             ps.setString(1, uuid);
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(uuid);
-            }
+            ps.execute();
         }
     }
 
@@ -155,9 +153,7 @@ public class SqlStorage extends Throwable implements Storage {
         try (PreparedStatement ps = conn.prepareStatement("DELETE FROM section WHERE resume_uuid = ?")) {
             String uuid = r.getUuid();
             ps.setString(1, uuid);
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(uuid);
-            }
+            ps.execute();
         }
     }
 
