@@ -118,7 +118,7 @@ public class SqlStorage extends Throwable implements Storage {
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact c")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    Resume r = resumeMap.get("resume_uuid");
+                    Resume r = resumeMap.get(rs.getString("resume_uuid"));
                     addContactsToResume(r, rs);
                 }
             }
@@ -126,7 +126,7 @@ public class SqlStorage extends Throwable implements Storage {
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section s")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    Resume r = resumeMap.get("uuid");
+                    Resume r = resumeMap.get(rs.getString("uuid"));
                     addSectionsToResume(r, rs);
                 }
             }
