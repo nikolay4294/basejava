@@ -33,9 +33,12 @@ public class SqlStorage extends Throwable implements Storage {
                     try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
                         ps.setString(1, r.getFullName());
                         ps.setString(2, r.getUuid());
+                        if (ps.executeUpdate() != 1) {
+                            throw new NotExistStorageException(r.getUuid());
+                        }
                     }
                     deleteContactsFromDB(r, conn);
-                    deleteSectionsFromDB(r,conn);
+                    deleteSectionsFromDB(r, conn);
                     saveContactsToDB(r, conn);
                     saveSectionsToDB(r, conn);
                     return null;

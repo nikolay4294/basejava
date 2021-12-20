@@ -1,6 +1,7 @@
 package com.urise.webapp.sql;
 
 import com.urise.webapp.exception.ExceptionUtil;
+import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 
 import java.sql.Connection;
@@ -36,6 +37,7 @@ public class SqlHelper {
             }
         } catch (SQLException e) {
             throw new StorageException(e);
+            //throw new NotExistStorageException("error, no resume");
         }
     }
 }
