@@ -1,12 +1,13 @@
 package com.urise.webapp.web;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Vector;
 
-public class  ResumeServlet extends HttpServlet {
+public class ResumeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -19,7 +20,7 @@ public class  ResumeServlet extends HttpServlet {
         //response.setHeader("Content-Type","text/html; charset=UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String name = request.getParameter("name");
-        response.getWriter().write(name  ==null ? "Hello Resumes!" : "Hello" + name + "!");
+        response.getWriter().write(name == null ? "Hello Resumes!" : "Hello" + name + "!");
         printTable(request, response);
     }
 
