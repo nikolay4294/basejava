@@ -129,7 +129,7 @@ public class SqlStorage extends Throwable implements Storage {
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section s")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    Resume r = resumeMap.get(rs.getString("uuid"));
+                    Resume r = resumeMap.get(rs.getString("resume_uuid"));
                     addSectionsToResume(r, rs);
                 }
             }
@@ -178,7 +178,10 @@ public class SqlStorage extends Throwable implements Storage {
             for (Map.Entry<SectionType, Section> e : r.getSections().entrySet()) {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, e.getKey().name());
-                ps.setString(3, String.valueOf(e.getValue()));
+
+                Section section = e.getValue();
+                ps.setString(3, JsonParser.write(section, Section.class));
+
                 ps.addBatch();
             }
             ps.executeBatch();

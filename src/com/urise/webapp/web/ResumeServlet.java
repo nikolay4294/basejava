@@ -1,5 +1,9 @@
 package com.urise.webapp.web;
 
+import com.urise.webapp.Config;
+import com.urise.webapp.storage.Storage;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,24 +12,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class ResumeServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        //response.setHeader("Content-Type","text/html; charset=UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        String name = request.getParameter("name");
-        response.getWriter().write(name == null ? "Hello Resumes!" : "Hello" + name + "!");
-        printTable(request, response);
+
     }
 
-    private void printTable(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+//        response.setHeader("Content-Type", "text/html; charset=UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+        //Writer writer = response.getWriter();
         PrintWriter out = response.getWriter();
         HtmlUtils hu = new HtmlUtils();
 
