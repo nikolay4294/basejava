@@ -60,6 +60,14 @@ public class Resume implements Comparable<Resume>, Serializable {
         sections.put(st, s);
     }
 
+    public String getContacts(ContactType type){
+        return contacts.get(type);
+    }
+
+    public Section getSections(SectionType type){
+        return sections.get(type);
+    }
+
     @Override
     public int compareTo(Resume o) {
         int result = fullName.compareTo(o.getFullName());
