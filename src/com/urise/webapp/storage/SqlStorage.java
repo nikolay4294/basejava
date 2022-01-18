@@ -18,8 +18,12 @@ public class SqlStorage extends Throwable implements Storage {
 
     public final SqlHelper sqlHelper;
 
-    public SqlStorage(String dbUrl, String dbUser, String dbPassword) throws ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
+    public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -147,15 +151,15 @@ public class SqlStorage extends Throwable implements Storage {
     }
 
     private void deleteContactsFromDB(Resume r, Connection conn) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
-            String uuid = r.getUuid();
-            ps.setString(1, uuid);
-            ps.execute();
-        }
+        deleteAttributes(r, conn, "DELETE FROM contact WHERE resume_uuid = ?");
     }
 
     private void deleteSectionsFromDB(Resume r, Connection conn) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM section WHERE resume_uuid = ?")) {
+        deleteAttributes(r, conn, "DELETE FROM section WHERE resume_uuid = ?");
+    }
+
+    private void deleteAttributes(Resume r, Connection conn, String sql) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             String uuid = r.getUuid();
             ps.setString(1, uuid);
             ps.execute();

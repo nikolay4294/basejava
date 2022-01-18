@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class Config {
 
-    protected final static File PROPS = new File(getHomeDir(), "config\\resumes.properties");
+    protected final static File PROPS = new File(getHomeDir(), "config/resumes.properties");
     private static final Config INSTANCE = new Config();
 
     private final File storageDir;
@@ -27,7 +27,7 @@ public class Config {
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
             storage = new SqlStorage(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password"));
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
         }
     }
