@@ -6,6 +6,7 @@ import com.urise.webapp.model.Section;
 
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Type;
 
 public class JsonParser {
     private static Gson GSON = new GsonBuilder()
@@ -20,11 +21,15 @@ public class JsonParser {
         GSON.toJson(object, writer);
     }
 
-    public static Section read(String value, Class<Section> sectionClass) {
+    public static <T> T read(String value, Class<T> sectionClass) {
         return GSON.fromJson(value, sectionClass);
     }
 
     public static <T> String write(T value, Class<T> sectionClass) {
         return GSON.toJson(value, sectionClass);
+    }
+
+    public static <T> String write(T object) {
+        return GSON.toJson(object);
     }
 }

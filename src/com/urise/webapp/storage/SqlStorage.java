@@ -160,8 +160,7 @@ public class SqlStorage extends Throwable implements Storage {
 
     private void deleteAttributes(Resume r, Connection conn, String sql) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            String uuid = r.getUuid();
-            ps.setString(1, uuid);
+            ps.setString(1, r.getUuid());
             ps.execute();
         }
     }
@@ -183,10 +182,8 @@ public class SqlStorage extends Throwable implements Storage {
             for (Map.Entry<SectionType, Section> e : r.getSections().entrySet()) {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, e.getKey().name());
-
                 Section section = e.getValue();
                 ps.setString(3, JsonParser.write(section, Section.class));
-
                 ps.addBatch();
             }
             ps.executeBatch();
