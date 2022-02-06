@@ -76,6 +76,7 @@ public class SqlStorage extends Throwable implements Storage {
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next()) {
                     throw new NotExistStorageException(uuid);
+
                 }
                 r = new Resume(uuid, rs.getString("full_name"));
             }

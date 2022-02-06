@@ -18,14 +18,15 @@
             <th></th>
             <th></th>
         </tr>
+        <jsp:useBean id="resumes" scope="request" type="java.util.List"/>
         <c:forEach items="${resumes}" var="resume">
             <jsp:useBean id="resume" type="com.urise.webapp.model.Resume"/>
             <tr>
-                <td><a href="resume?uuid= ${resume.uuid}&action=view">${resume.fullName}</a></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
                 <td><%=ContactType.MAIL.toHtml(resume.getContacts(ContactType.MAIL))%>
                 </td>
-                <td><a href="resume?uuid= ${resume.uuid}&action=delete">Delete</a></td>
-                <td><a href="resume?uuid= ${resume.uuid}&action=edit">Edit</a></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=delete">Delete</a></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=edit">Edit</a></td>
             </tr>
         </c:forEach>
     </table>
