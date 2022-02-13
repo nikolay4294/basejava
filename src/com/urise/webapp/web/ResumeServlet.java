@@ -28,11 +28,12 @@ public class ResumeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        String uuid = request.getParameter("uuid");
-        String action = request.getParameter("action");
+        String uuid = request.getParameter("uuid"); //получаем параметр, который отправлен сервлету
+        String action = request.getParameter("action"); //аналогично
         if (action == null) {
-            request.setAttribute("resumes", storage.getAllSorted());
-            request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
+            request.setAttribute("resumes", storage.getAllSorted()); //передача данных из сервлета в jsp/
+                                                                        //устанавливает атрибут,который можно получить в jsp
+            request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);//переадресация на ресурс list.jsp
             return;
         }
 
@@ -43,15 +44,16 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume"); // после удаления возвращаемся на стартовую страницу.
                 return;
             case "view":
+                r = storage.get(uuid);
+                break;
             case "edit":
                 r = storage.get(uuid);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is  illegal");
         }
-        request.setAttribute("resume", r);
+        request.setAttribute("resume", r); //ответ сервлета(ответом будет инициализированное резюме)
         request.getRequestDispatcher(
-                ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp" +
-                        "it")).forward(request, response);
+                ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")).forward(request, response);
     }
 }
