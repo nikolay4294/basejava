@@ -26,7 +26,7 @@
     <p>
     <hr>
     <table cellpadding="2">
-        <c:forEach var="sectionEntry" items="${resume.sections}">
+        <c:forEach var="sectionEntry" items="${resume.section}">
             <jsp:useBean id="sectionEntry"
                          type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
             <c:set var="type" value="${sectionEntry.key}"/>

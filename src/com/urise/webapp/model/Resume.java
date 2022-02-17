@@ -14,6 +14,16 @@ import java.util.*;
 
 public class Resume implements Comparable<Resume>, Serializable {
     private static final long serialVersionUID = 1L;
+    public static final Resume EMPTY = new Resume();
+
+    static {
+        EMPTY.setSection(SectionType.OBJECTIVE, TextSection.EMPTY);
+        EMPTY.setSection(SectionType.PERSONAL, TextSection.EMPTY);
+        EMPTY.setSection(SectionType.ACHIEVEMENT, TextSection.EMPTY);
+        EMPTY.setSection(SectionType.QUALIFICATIONS, TextSection.EMPTY);
+        EMPTY.setSection(SectionType.EXPERIENCE, TextSection.EMPTY);
+        EMPTY.setSection(SectionType.EDUCATION, TextSection.EMPTY);
+    }
 
     // Unique identifier
     private String uuid;
