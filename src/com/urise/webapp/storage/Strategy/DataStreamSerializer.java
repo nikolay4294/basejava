@@ -14,13 +14,13 @@ public class DataStreamSerializer implements Serializer {
             dos.writeUTF(resume.getFullName());
 
             Map<ContactType, String> contacts = resume.getContacts();
-            writeWithException(contacts.entrySet(), dos, entry -> {
+            writeCollection(contacts.entrySet(), dos, entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             });
 
-            Map<SectionType, Section> sections = resume.getSections();
-            writeWithException(sections.entrySet(), dos, entry -> {
+            Map<SectionType, Section> sections = resume.getSection();
+            writeCollection(sections.entrySet(), dos, entry -> {
                 SectionType sectionType = entry.getKey();
                 Section section = entry.getValue();
                 dos.writeUTF(sectionType.name());
@@ -32,14 +32,14 @@ public class DataStreamSerializer implements Serializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeWithException(((ListSection) section).getItems(), dos, dos::writeUTF);
+                        writeCollection(((ListSection) section).getItems(), dos, dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        writeWithException(((OrganizationSection) section).getOrganizations(), dos, organization -> {
+                        writeCollection(((OrganizationSection) section).getOrganizations(), dos, organization -> {
                             Link link = organization.getHomePage();
                             writeLink(dos, link);
-                            writeWithException(organization.getPositions(), dos, position -> {
+                            writeCollection(organization.getPositions(), dos, position -> {
                                 writeLocalDate(dos, position.getStartDate());
                                 writeLocalDate(dos, position.getEndDate());
                                 dos.writeUTF(position.getTitle());
@@ -58,18 +58,8 @@ public class DataStreamSerializer implements Serializer {
         dos.writeInt(ld.getMonth().getValue());
     }
 
-    private void writeLink(DataOutputStream dos, Link link) throws IOException {
-        dos.writeUTF(link.getName());
-        String url = link.getUrl();
-        dos.writeUTF(url == null ? ("") : url);
-    }
-
-    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, ItemWriter<T> writer) throws IOException {
-        Objects.requireNonNull(writer);
-        dos.writeInt(collection.size());
-        for (T element : collection) {
-            writer.write(element);
-        }
+    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
     }
 
     @Override
@@ -79,10 +69,10 @@ public class DataStreamSerializer implements Serializer {
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
 
-            readItem(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readItem(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             readItem(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                resume.addSections(sectionType, readSection(dis, sectionType));
+                resume.setSection(sectionType, readSection(dis, sectionType));
             });
             return resume;
         }
@@ -95,14 +85,15 @@ public class DataStreamSerializer implements Serializer {
                 return new TextSection(dis.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                return new ListSection(readWithException(dis, dis::readUTF));
+                return new ListSection(readList(dis, dis::readUTF));
             case EXPERIENCE:
             case EDUCATION:
-                return new OrganizationSection(readWithException(dis, () -> new Organization(readLink(dis), readWithException(dis, () -> new Organization.Position(
+                return new OrganizationSection(readList(dis, () -> new Organization(readLink(dis), readList(dis, () -> new Organization.Position(
                         readLocalDate(dis), readLocalDate(dis), dis.readUTF(), readDescriptionAndUrl(dis)
                 )))));
+            default:
+                throw new IllegalStateException();
         }
-        throw new IllegalStateException();
     }
 
     private void readItem(DataInputStream dis, Item item) throws IOException {
@@ -112,8 +103,14 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
-        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+    private <T> List<T> readList(DataInputStream dis, ItemReader<T> reader) throws IOException {
+        Objects.requireNonNull(reader);
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
+        }
+        return list;
     }
 
     private Link readLink(DataInputStream dis) throws IOException {
@@ -126,19 +123,9 @@ public class DataStreamSerializer implements Serializer {
         return value.equals("") ? null : value;
     }
 
-    private <T> List<T> readWithException(DataInputStream dis, ItemReader<T> reader) throws IOException {
-        Objects.requireNonNull(reader);
-        int size = dis.readInt();
-        List<T> list = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            list.add(reader.read());
-        }
-        return list;
-    }
-
     @FunctionalInterface
-    private interface ItemWriter<T> {
-        void write(T t) throws IOException;
+    private interface ElementProcessor {
+        void process() throws IOException;
     }
 
     @FunctionalInterface
@@ -147,7 +134,26 @@ public class DataStreamSerializer implements Serializer {
     }
 
     @FunctionalInterface
+    private interface ItemWriter<T> {
+        void write(T t) throws IOException;
+    }
+
+    @FunctionalInterface
     private interface Item {
         void readItem() throws IOException;
+    }
+
+    private void writeLink(DataOutputStream dos, Link link) throws IOException {
+        dos.writeUTF(link.getName());
+        String url = link.getUrl();
+        dos.writeUTF(url == null ? ("") : url);
+    }
+
+    private <T> void writeCollection(Collection<T> collection, DataOutputStream dos, ItemWriter<T> writer) throws IOException {
+        Objects.requireNonNull(writer);
+        dos.writeInt(collection.size());
+        for (T element : collection) {
+            writer.write(element);
+        }
     }
 }

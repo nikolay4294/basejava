@@ -12,18 +12,18 @@ public class ResumeTestData {
 
         Resume resume = new Resume(uuid, fullName);
 
-        resume.addContact(ContactType.PHONE, " +7(921) 855-0482\n");
-        resume.addContact(ContactType.MAIL, " gkislin@yandex.ru\n");
-        resume.addContact(ContactType.GITHUB, " https://github.com/gkislin\n");
-        resume.addContact(ContactType.HOMEPAGE, " http://gkislin.ru\n");
-        resume.addContact(ContactType.LINKED, " https://www.linkedin.com/in/gkislin\n");
-        resume.addContact(ContactType.SKYPE, " grigory.kislin\n");
-        resume.addContact(ContactType.STACK, " https://stackoverflow.com/users/548473/grigory-kislin\n");
+        resume.setContact(ContactType.PHONE, " +7(921) 855-0482\n");
+        resume.setContact(ContactType.MAIL, " gkislin@yandex.ru\n");
+        resume.setContact(ContactType.GITHUB, " https://github.com/gkislin\n");
+        resume.setContact(ContactType.HOMEPAGE, " http://gkislin.ru\n");
+        resume.setContact(ContactType.LINKED, " https://www.linkedin.com/in/gkislin\n");
+        resume.setContact(ContactType.SKYPE, " grigory.kislin\n");
+        resume.setContact(ContactType.STACK, " https://stackoverflow.com/users/548473/grigory-kislin\n");
 
-        resume.addSections(SectionType.OBJECTIVE, new TextSection("Objective1"));
-        resume.addSections(SectionType.PERSONAL, new TextSection("Personal data"));
-        resume.addSections(SectionType.ACHIEVEMENT, new ListSection("Achievement11", "Achievement12", "Achievement13"));
-        resume.addSections(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
+        resume.setSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+        resume.setSection(SectionType.PERSONAL, new TextSection("Personal data"));
+        resume.setSection(SectionType.ACHIEVEMENT, new ListSection("Achievement11", "Achievement12", "Achievement13"));
+        resume.setSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
         /*
         resume.addSections(SectionType.EXPERIENCE,
                 new OrganizationSection(

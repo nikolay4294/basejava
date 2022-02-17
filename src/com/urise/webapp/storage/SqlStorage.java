@@ -180,7 +180,7 @@ public class SqlStorage extends Throwable implements Storage {
 
     private void saveSectionsToDB(Resume r, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
-            for (Map.Entry<SectionType, Section> e : r.getSections().entrySet()) {
+            for (Map.Entry<SectionType, Section> e : r.getSection().entrySet()) {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, e.getKey().name());
                 Section section = e.getValue();
@@ -195,7 +195,7 @@ public class SqlStorage extends Throwable implements Storage {
         String value = rs.getString("value");
         String type = rs.getString("type");
         if (type != null) {
-            r.addContact(ContactType.valueOf(type), value);
+            r.setContact(ContactType.valueOf(type), value);
         }
     }
 
@@ -203,7 +203,7 @@ public class SqlStorage extends Throwable implements Storage {
         String value = rs.getString("value");
         if (value != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            r.addSections(type, JsonParser.read(value, Section.class));
+            r.setSection(type, JsonParser.read(value, Section.class));
         }
     }
 }
